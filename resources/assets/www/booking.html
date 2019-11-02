@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+	<title>Rosalia Indah Transport</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" type="text/css" href="assets/datepicker/css/bootstrap-datepicker.css" />
+	<link rel="stylesheet" type="text/css" href="assets/select2/css/select2.css" />
+	<link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+	<!-- js-Query -->
+	<script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/theme/js/custom.js"></script>
+	<script type="text/javascript" src="assets/theme/js/jquery.validate.js"></script>
+	<script type="text/javascript" src="assets/bootbox/bootbox.min.js"></script>
+	<script>
+		function validateFormPesan() {
+
+			var validator = $("#FormCariTiket").validate();//==>nama form
+			if (validator.form()) {
+
+				// submit with AJAX
+				return true;
+			} else {
+				setTimeout(function () { $('#modalBooking').hide(); }, 1000);
+				validator.focusInvalid();
+				return false;
+			}
+		}
+		function pesan() {
+			var pr = $("#tanggal_keberangkatan").val();
+			var kelasid = $("#kelasid").val();
+			var kls = $("#kls").val();
+			var jml = $("#jml").val();
+			var nk = $("#nk").val();
+			var trn = $("#trn").val();
+			var agnasal = $("#AgenAsal").text();
+			var agntujuan = $("#AgenTujuan").text();
+			var kodeasal = $("#KodeAsal").text();
+			var kodetujuan = $("#KodeTujuan").text();
+
+			localStorage.setItem('kls', kls);
+			localStorage.setItem('kelasid', kelasid);
+			localStorage.setItem('jml', jml);
+			localStorage.setItem('nk', nk);
+			localStorage.setItem('trn', trn);
+			localStorage.setItem('pr', pr);
+
+			sessionStorage.setItem('agenasal', agnasal);
+			sessionStorage.setItem('agentujuan', agntujuan);
+			sessionStorage.setItem('kodeasal', kodeasal);
+			sessionStorage.setItem('kodetujuan', kodetujuan);
+			setTimeout(function () { $('#modalBooking').modal('hide'); }, 5000);
+			//window.location.href = ('pesan.html')
+			setTimeout(function () {
+				window.location.href = ('pesan.html')
+			}, 3000);
+		}
+		$(document).ready(function () {
+			$('#pesan').on('click', function (e) {
+				//alert(1);
+				$('#modalBooking').modal('hide');
+				if (validateFormPesan()) {
+					$('#modalBooking').modal('show');
+					pesan();
+				}
+			});
+
+			$('#tgl').datepicker({
+				format: "yyyy-mm-dd",
+				startDate: '+1d',
+				todayHighlight: false
+			});
+
+			$("#pilih_tanggal").click(function () {
+				var tgl = $("#tanggal_keberangkatan").val();
+				$("#text_tgl").text(hari_tgl_indo(tgl));
+				$('#modalBooking').modal('hide');
+				$("#invalidTgl").hide();
+			});
+
+			$('.jml a').click(function () {
+				$('#jml').val($(this).text());
+				$('#selectjml').text($(this).text());
+				$('#jml_pnp').removeClass("text-danger");
+				$('#modalBooking').modal('hide');
+			});
+
+			//validasi data
+			$('#FormCariTiket').validate({
+				ignore: "",
+				rules: {
+					tanggal_keberangkatan: {
+						required: true
+					},
+					kelasid: {
+						required: true
+					},
+					jml: {
+						required: true
+					},
+					nk: {
+						required: true
+					},
+					trn: {
+						required: true
+					}
+				},
+				errorPlacement: function (error, element) {
+					$('#modalBooking').modal('hide');
+					if (element.attr("name") == "tanggal_keberangkatan") {
+						$("#invalidTgl").show();
+						//$('#warning').modal('toggle'); 
+					}
+					if (element.attr("name") == "kelasid") {
+						$("#kls").addClass("text-danger");
+						$("#kls").text("Harap dipilih");
+					}
+					if (element.attr("name") == "jml") {
+						$("#jml_pnp").addClass("text-danger");
+						$("#selectjml").text("Harap dipilih");
+					}
+					if (element.attr("name") == "nk") {
+						$("#AgenAsal").addClass("text-danger");
+					}
+					if (element.attr("name") == "trn") {
+						$("#AgenTujuan").addClass("text-danger");
+					}
+				}
+			});
+		});
+	</script>
+</head>
+
+<body>
+
+	<nav class="navbar bg-maroon navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+			</div>
+		</div>
+	</nav>
+
+	<form id="FormCariTiket" class="bg-white">
+		<div class="background-content">
+			<div class="head-wizard">
+				<ul class="steps">
+					<li class="active">
+						<span class="step">1</span>
+						<span class="title">Cari Tiket</span>
+					</li>
+					<li>
+						<span class="step">2</span>
+						<span class="title">Pilih Rute</span>
+					</li>
+					<li>
+						<span class="step">3</span>
+						<span class="title">Isi Data</span>
+					</li>
+					<li>
+						<span class="step">4</span>
+						<span class="title">Pembayaran</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-reserved">
+				<button type="button" class="btn btn-block bg-white" data-toggle="modal" data-target="#date">
+					<dd class="text-left text-grey">Pilih Tanggal Keberangkatan<span class="pull-right fa fa-angle-down"></span></dd>
+					<dd class="text-left lighther"><span id="text_tgl"></span></dd>
+					<dd class="text-left text-danger" id="invalidTgl" style="display:none;"><span>Tanggal keberangkatan wajib dipilih</span></dd>
+				</button>
+				<!-- Modal -->
+				<div id="date" class="modal fade" role="dialog">
+					<div class="mini-modal">
+						<!-- Modal content-->
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<dd class="medium-lg">Pilih Tanggal Keberangkatan</dd>
+							</div>
+							<div class="modal-body" id="tgl">
+								<input class="form-control datepicker" type="hidden" id="tanggal_keberangkatan" name="tanggal_keberangkatan"
+								 data-date-format="yyyy-mm-dd">
+								<div></div>
+							</div>
+
+							<div class="modal-footer">
+								<div class="alert  maximum">
+									Reservasi via online tidak dapat dilakukan <br>pada hari H keberangkatan
+								</div>
+								<button type="button" class="btn btn-red pull-right" data-dismiss="modal" id="pilih_tanggal">Pilih</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-reserved">
+				<div class="btn-group btn-group-justified">
+					<div class="btn-group">
+						<button href="#" class="btn bg-white border-right dropdown-toggle" data-toggle="dropdown">
+							<dd class="text-left text-grey">Pilih Kelas Armada<span class="pull-right fa fa-angle-down"></span></dd>
+							<dd class="text-left lighther" name="kls" id="kls"></dd>
+							<input type="hidden" name="kelasid" id="kelasid" value="">
+						</button>
+						<ul class="dropdown-menu" role="menu" id='list_kelas'>
+							<li value="">
+								<a id="kelas0" onclick="pilihkls(id)" kelasid="0">Semua Kelas Armada</a>
+							</li>
+						</ul>
+					</div>
+					<div class="btn-group">
+						<button href="#" class="btn bg-white dropdown-toggle" data-toggle="dropdown">
+							<dd class="text-left text-grey">Jumlah Penumpang<span class="pull-right fa fa-angle-down"></span></dd>
+							<dd class="text-left lighther" id="jml_pnp"><span id="selectjml"></span></dd>
+							<input type="hidden" id="jml" name="jml" value="">
+						</button>
+						<ul class="dropdown-menu jml" role="menu">
+							<li><a href="#">1</a></li>
+							<li><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">4</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-reserved">
+				<div class="btn-group btn-group-justified">
+					<div class="btn-group">
+						<div class="btn-book bg-white" data-toggle="modal" data-target="#asal">
+							<div class="pull-left">
+								<dd class="medium-big-left text-grey" id="KodeAsal">Agen Keberangkatan</dd>
+								<dd class="text-left lighther" id="AgenAsal">Pilih Agen Asal/Kota Asal</dd>
+							</div>
+						</div>
+						<!-- Modal Asal-->
+						<div id="asal" class="modal fade" role="dialog">
+							<div class="modal-reserved">
+								<!-- Modal content-->
+								<div class="modal-content">
+									<div class="modal-header ">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<dd class="medium-lg">Pilih Agen Asal/Kota Asal</dd>
+									</div>
+									<div class="modal-body">
+										<select name="nk" class="form-control js-select" id="nk" required>
+											<option value="" disabled selected>Silahkan ketik kota/agen asal . .</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="btn-group btn-group-justified">
+					<div class="btn-group bg-white">
+						<div class="text-center">
+							<img src="assets/images/icon/shd.gif" width="80" class="center-block" />
+						</div>
+					</div>
+				</div>
+				<div class="btn-group btn-group-justified">
+					<div class="btn-group">
+						<div class="btn-book bg-white" id="pilihtujuan">
+							<div class="pull-right">
+								<dd class="medium-big-right text-grey" id="KodeTujuan">Agen Kedatangan</dd>
+								<dd class="text-right lighther" id="AgenTujuan">Pilih Agen Tujuan / Kota Tujuan</dd>
+							</div>
+						</div>
+						<!-- Modal Tujuan-->
+						<div id="tujuan" class="modal fade" role="dialog">
+							<div class="modal-reserved">
+								<!-- Modal content-->
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<dd class="medium-lg">Pilih Agen Tujuan / Kota Tujuan</dd>
+									</div>
+									<div class="modal-body">
+										<select name="trn" class="form-control js-select" id="trn" required>
+											<option value="" disabled selected>Silahkan ketik kota/agen tujuan . .</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="alert alert-warning">
+			Reservasi via online dapat dilakukan minimal H-1, <br>
+			Anak usia 4 tahun atau tinggi badan di atas 90cm dikenakan biaya penuh.
+		</div>
+
+		<div class="navbar-fixed-bottom">
+			<div class="btn-group btn-group-justified">
+				<a class="btn btn-lg btn-grey btn-block" id="pesan">Cari Tiket</a>
+			</div>
+		</div>
+		<div class="modal fade" id="modalBooking" tabindex="-1" role="dialog" style="display:none">
+			<div class="modal-dialog">
+				<div class="modal-loading">
+					<div class="loader-container">
+						<div class="container three">
+							<div class="spinner3"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</form>
+	<div id="confirm" class="modal fade show-modal modal-body-resize" role="dialog" style="background-color: #fff">
+		<div class="modal-dialog bg-color  " style="background-color: #fff">
+			<div class="modal-content modal-content-size" style="background-color: #fff">
+				<div class="modal-body " style="background-color: #fff">
+					<form class="resize-modal" style="background-color: #fff" role="form">
+						<p class="text-warning" style="margin-top: 10px;">
+							Terjadi kesalahan, mohon coba beberapa saat lagi.
+						</p>
+						<div class="modal-footer-size">
+							<button type="button" class="btn-ok-log btn-error" data-dismiss="modal">Ok</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="cordova.js"></script>
+	<script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="assets/datepicker/js/bootstrap-datepicker.js"></script>
+	<script type="text/javascript" src="assets/select2/js/select2.js"></script>
+	<script type="text/javascript" src="assets/theme/js/config.js"></script>
+	<script type="application/javascript">
+		function formatResult(data) {
+			if (!data.id) {
+				return data.text;
+			}
+			var $data = $('<span><b>' + data.kode + ' - ' + data.text + '</b></span></br><span>' + ucwords(data.kota) + '</span>');
+
+			return $data;
+		};
+
+		$('#nk').on('select2:select', function (e) {
+			$("#AgenAsal").removeClass("text-danger");
+			$('#asal').modal('toggle');
+			var data = e.params.data;
+			//alert (data.kode)
+			$('#KodeAsal').removeClass('grey');
+			$('#KodeAsal').addClass('maroon');
+			$('#KodeAsal').text(data.kode);
+			$('#AgenAsal').text(data.text + ', ' + ucwords(data.kota));
+			var id = $(this).val();
+			var config = ApiAddressprodAndDev();
+			//alert(kota);
+			//var url = 'http://117.54.124.38:81/riis-prod/api/v1/mobile/agenreserve/'+id;
+			$('#trn').select2({
+				
+				ajax: {
+					type: "POST",
+					delay: 250,
+					// url: 'http://192.168.200.2:82/riis_prod_api/api/v1/mobile/getagentujuan/' + id,
+					url: `${config}/mobiledev/getagentujuan/` + id,
+					data: function (params) {
+						return {
+							q: params.term // search term
+						};
+					},
+					processResults: function (data) {
+						return {
+							results: $.map(data, function (obj) {
+								return { id: obj.agen_id, text: obj.nama_agen, kode: obj.singkatan, kota: obj.nama_kota };
+							})
+						};
+					},
+
+
+				},
+				templateResult: formatResult,
+				closeOnSelect: true
+			});
+
+		});
+
+		$('#trn').on('select2:select', function (e) {
+			$("#AgenTujuan").removeClass("text-danger");
+			$('#tujuan').modal('toggle');
+			var data = e.params.data;
+			$('#KodeTujuan').removeClass('grey');
+			$('#KodeTujuan').addClass('maroon');
+			$('#KodeTujuan').text(data.kode);
+			$('#AgenTujuan').text(data.text + ', ' + ucwords(data.kota));
+		});
+
+
+		function kelas() {
+			var config = ApiAddressprodAndDev();
+			$.ajax({
+				type: "GET",
+				// url: "http://192.168.200.2:82/riis_prod_api/api/v1/mobile/getkelas",
+				url: `${config}/mobiledev/getkelas`,
+				cache: true,
+				data: {},
+				dataType: 'json',
+				success: function (data) {
+					$.each(data, function (key, v) {
+						$('#list_kelas').append('<li value="' + v.kelas_id + '">' + '<a id="kelas' + v.kelas_id + '" onclick="pilihkls(id)" kelasid = "' + v.kelas_id + '" >' + v.nama_kelas + '</a></li>');
+					});
+
+				},
+				error: function (error) {
+
+					// $('#confirm').modal('show');
+					navigator.notification.confirm(
+						'Terjadi kesalaham pada server, mohon coba beberapa saat lagi',  // message
+						onConfirm,              // callback to invoke with index of button pressed
+						'Terjadi kesalahan',            // title
+						'Ok'          // buttonLabels
+					);
+				}
+			});
+		}
+
+		function onConfirm(button) {
+			if (button == 1) {//ok
+				window.location = "index.html";
+			}
+		}
+
+		function pilihkls(id) {
+			var kelas = $("#" + id).text();
+			$("#kls").removeClass("text-danger");
+			$("#kls").text(kelas);
+			var kelasid = $("#" + id).attr('kelasid');
+			$("#kelasid").val(kelasid);
+			$("#kelasid").val(kelasid);
+		}
+
+		$(document).ready(function () {
+			kelas();
+			var config = ApiAddressprodAndDev();
+			$('.js-select').css('width', '100%');
+			$('.js-select').select2();
+			$('#nk').select2({
+				ajax: {
+					type: "POST",
+					delay: 250,
+					// url: 'http://192.168.200.2:82/riis_prod_api/api/v1/mobile/getagenasal/',
+					url: `${config}/mobiledev/getagenasal/`,
+					data: function (params) {
+						return {
+							q: params.term // search term
+						};
+					},
+					processResults: function (data) {
+						return {
+							results: $.map(data, function (obj) {
+								return { id: obj.agen_id, text: obj.nama_agen, kode: obj.singkatan, kota: obj.nama_kota };
+							})
+						};
+					},
+
+
+				},
+				templateResult: formatResult,
+				closeOnSelect: true
+			});
+			$("#pilihtujuan").click(function () {
+				var nk = $("#nk").val();
+				if (nk) {
+					$("#tujuan").modal("show");
+				} else {
+					var dialog = bootbox.dialog({
+						title: ' ',
+						size: 'small',
+						message: '<p><i class="fa fa-spin fa-spinner"></i> Loading...</p>'
+					});
+					dialog.init(function () {
+						setTimeout(function () {
+							dialog.find('.bootbox-body').html('Harap pilih Agen asal terlebih dahulu.');
+						}, 1000);
+					});
+				}
+
+			});
+
+
+		});
+	</script>
+
+	<style type="text/css">
+		.ui-button.ui-corner-all.ui-widget.ui-button-icon-only.ui-dialog-titlebar-close {
+			display: none;
+		}
+
+		.modal-loading {
+			background-color: rgba(0, 0, 0, 0.1);
+		}
+
+		@keyframes rotate {
+			from {
+				transform: rotate(0deg);
+			}
+
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		.opacity {
+			background-color: fade(#736565, 50%);
+		}
+
+
+		.container {
+			width: 100%;
+			height: 50px;
+			padding: 350px 0;
+			text-align: center;
+		}
+
+		.spinner3 {
+			width: 50px;
+			height: 50px;
+			margin: 0 auto;
+			border: 4px solid;
+			border-radius: 50%;
+			border-color: #1bbc9b;
+			animation: scale 900ms infinite linear;
+		}
+
+		.s61 {
+			animation-delay: 0ms;
+		}
+
+		.s62 {
+			animation-delay: 500ms;
+		}
+
+		.s63 {
+			animation-delay: 1000ms;
+		}
+
+		@keyframes spin {
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+
+		@keyframes scale {
+			0% {
+				transform: scale(0);
+			}
+
+			90% {
+				transform: scale(0.7);
+			}
+
+			100% {
+				transform: scale(1);
+			}
+		}
+
+		@keyframes border {
+			0% {
+				border-radius: 0;
+			}
+
+			50% {
+				border-radius: 50%;
+			}
+
+			100% {
+				border-radius: 0;
+			}
+		}
+	</style>
+</body>
+
+</html>

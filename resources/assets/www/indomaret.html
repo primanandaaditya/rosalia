@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+    <title>Rosalia Indah Transport</title>
+
+    <link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+    <!-- js-Query -->
+    <script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+    <!-- <script src="assets/theme/js/countdown.js"></script> -->
+    <script>
+        document.addEventListener("deviceready", onDeviceReady, false);
+        function onDeviceReady() {
+            document.addEventListener("backbutton", function (e) {
+                e.preventDefault();
+            }, false);
+        }
+
+        var startButton = document.getElementById("start");
+        var stopButton = document.getElementById("stop");
+        var resetButton = document.getElementById("reset");
+        var minsLeft = document.getElementById("mins-left");
+        var secsLeft = document.getElementById("secs-left");
+
+        var startTimer = function () {
+            console.log("Start");
+            begin = setInterval(countdown, 1000); // Call countdown function every 1000 milliseconds
+            startButton.disabled = true;
+            stopButton.disabled = false;
+        }
+
+        var stopTimer = function () {
+            console.log("Stop");
+            window.clearInterval(begin) // clear the timer and so stop the clock
+            stopButton.disabled = true;
+            startButton.disabled = false;
+        }
+
+        var resetTimer = function () {
+            console.log("Reset");
+            window.clearInterval(begin) // clear the timer and so stop the clock
+            secsLeft.innerText = 00;
+            minsLeft.innerText = document.getElementById("mins").innerText;
+            stopButton.disabled = true;
+            startButton.disabled = false;
+        }
+
+        // This is what makes the clock tick downwards
+        var countdown = function () {
+            console.log("countdown");
+            if (secsLeft.innerText <= 0) {
+                secsLeft.innerText = 60;
+                minsLeft.innerText--;
+            };
+            secsLeft.innerText--;
+
+            if (secsLeft.innerText <= 0 && minsLeft.innerText <= 0) {
+                window.clearInterval(begin);
+                var audio = new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/11525/alarm.wav');
+                audio.play();
+            };
+        }
+
+        var more = function () {
+            document.getElementById("mins").innerText++;
+            minsLeft.innerText = document.getElementById("mins").innerText;
+        }
+
+        var less = function () {
+            document.getElementById("mins").innerText--;
+            if (document.getElementById("mins").innerText <= 1) { document.getElementById("mins").innerText = 1 };
+            minsLeft.innerText = document.getElementById("mins").innerText;
+        }
+
+        $(document).ready(function () {
+            var countDownDate = new Date("Jan 5, 2021 15:37:25").getTime();
+
+            // Update the count down every 1 second
+            var x = setInterval(function () {
+
+                // Get todays date and time
+                var now = new Date().getTime();
+
+                // Find the distance between now and the count down date
+                var distance = countDownDate - now;
+
+                // Time calculations for days, hours, minutes and seconds
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 2)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                console.log("waktu", seconds);
+
+                if (seconds == 0 && minutes == 0) {
+                    console.log("masuk");
+                    clearInterval(x);
+                }
+                // Output the result in an element with id="demo"
+                document.getElementById("demo").innerHTML = hours + "Hours " + "  " + + minutes + "Minutes " + seconds + "Seconds ";
+
+                // If the count down is over, write some text 
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById("demo").innerHTML = "EXPIRED";
+                }
+            }, 1000);
+        });
+    </script>
+</head>
+
+<body class="bg_only">
+    <nav class="navbar bg-maroon navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+                <i onclick="pay_back()"></i>
+            </div>
+        </div>
+    </nav>
+    <!-- <a class="step-step">Langkah-langkah melakukan pembayaran</a> -->
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12 time-order">
+                <div class="color-block-wrapper">
+                    <div class="no-tiket color-block-lblue color-block-icon-list">
+                        <div class="color-block-head-code">
+                            <div class="image-time time-pad"><img src="assets/images/icon/time.png"></div>
+                            Lakukan pembayaran dalam waktu 2 jam
+                        </div>
+                        <div class="color-block-head-number-code">
+                            <!-- <div class="countdown">
+                                <p class="timer">
+                                    <span type="hidden" id="days"></span>
+                                    <span id="hours"></span> Hour(s)
+                                    <span id="minutes"></span > Minute(s)
+                                    <span id="seconds"></span> Second(s)
+                                </p>
+                            </div> -->
+                            <p id="demo"></p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12 time-order">
+                <div class="color-block-wrapper">
+                    <div class="no-tiket color-block-lblue color-block-icon-list">
+                        <div class="color-block-head-code">
+                            <div class="image-time time-pad"><img src="assets/images/icon/booking-code.png"></div>
+                            Kode booking anda
+                        </div>
+                        <div class="color-block-head-number-code">
+                            BC23K
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-step">Langkah-langkah melakukan pembayaran</div>
+        <div class="circlestep dotbgstep">1</div>
+        <div class="step-by-step">Tunjukkan kode pembayaran kepada kasir</div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <div class="color-block-wrapper">
+                    <div class="no-tiket color-block-lblue color-block-icon-list">
+                        <div class="color-block-head-code">
+                            <div class="image-time"><img src="assets/images/icon/kode.png"></div>
+                            <!-- <div class="image-alfa"><img src="assets/images/icon/indomaret-logo.png"></div> -->
+                            Kode Pembayaran anda
+                        </div>
+                        <div class="color-block-head-number-code">
+                            21432143241234124
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <span class="step">2</span> -->
+        <div class="form-ket">
+            <div class="circledot dotbg"></div>
+            <span class="step-by-stepdot">Tunjukkan kode pembayaran anda ke kasir</span>
+            <div class="circledot2 dotbg2"></div>
+            <span class="step-by-stepdot2">Biaya tambahan sebesar Rp 7.700/transaksi</span>
+            <div class="circledot3 dotbg3"></div>
+            <span class="step-by-stepdot3">Biaya tambahan sewaktu-waktu bisa berubah tanpa pemberitahuan</span>
+            <div class="circledot3 dotbg3"></div>
+            <span class="step-by-stepdot3">Simpan struk anda sebagai bukti pembayaran yang sah</span>
+            <div class="circlestep2 dotbgstep2">2</div>
+            <div class="step-by-step2">Biaya yang harus dibayarkan</div>
+
+        </div>
+    </div>
+    <div class="container">
+        <h1>Pomodoro Timer</h1>
+        <div class="set-time">
+            <h4>Choose the length of your pomodoro</h4>
+            <p><span id="mins">25</span> minutes<br><span id="more" onclick="more()"><i class="fa fa-plus-square-o"></i></span>
+                <span id="less" onclick="less()"><i class="fa fa-minus-square-o"></i></span></p>
+        </div>
+
+        <div id="timer">
+            <div class="clock"><span id="mins-left">25</span>m <span id="secs-left">00</span>s</div>
+            <button class="button start" id="start" onclick="startTimer()">Start</button>
+            <button class="button stop" id="stop" onclick="stopTimer()">Stop</button>
+            <button class="button reset" id="reset" onclick="resetTimer()">Reset</button>
+        </div>
+    </div>
+    <div class="circlestep-permata-confirm dotbgstep-permata">3</div>
+    <div class="step-by-step-permata">Konfirmasi pembayaran</div>
+    <div class="circlestep-permata-confirm1 dotbgstep-permata1 alfa-pad" style="visibility: hidden;">8</div>
+    </div>
+
+    <div class="navbar-fixed-bottom">
+        <div class="confirm-payment">
+            <h1 class="txt-pay-konfirm">Segera lakukan konfirmasi pembayaran setelah anda melakukan pembayaran tiket
+                tersebut</h1>
+        </div>
+        <div class="btn-group btn-group-justified">
+            <a class="btn btn-lg btn-grey btn-block" id="pesan">Saya sudah membayar</a>
+        </div>
+    </div>
+
+
+
+
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="assets/theme/js/style.js"></script>
+
+</body>
+
+</html>

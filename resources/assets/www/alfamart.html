@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+    <title>Rosalia Indah Transport</title>
+
+    <link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+    <script type="text/javascript" src="assets/theme/js/moment.min.js"></script>
+    <!-- js-Query -->
+    <script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/theme/js/config.js"></script>
+    <script>
+        document.addEventListener("deviceready", onDeviceReady, false);
+        function onDeviceReady() {
+            document.addEventListener("backbutton", function (e) {
+                e.preventDefault();
+            }, false);
+        }
+        /* Fungsi formatRupiah */
+        function formatRupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            // tambahkan titik jika yang di input sudah menjadi angka ribuan
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+        }
+
+
+
+        $(document).ready(function () {
+            // var timer;
+            // var countDownDate = new Date("Jan 5, 2021 15:00:00").getTime();
+
+            // // Update the count down every 1 second
+            // var timer = setInterval(function () {
+
+            //     // Get todays date and time
+            //     var now = new Date().getTime();
+
+            //     // Find the distance between now and the count down date
+            //     var distance = countDownDate - now;
+            //     console.log('distance', distance)
+            //     var c = 3600;
+            //     // Time calculations for days, hours, minutes and seconds
+            //     // var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            //     var hours = Math.floor((distance % (1000 * 60 * 60 * 2)) / (1000 * 60 * 60));
+            //     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            //     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+
+
+            //     console.log("waktu", seconds);
+
+            //     if (hours == 0 && seconds == 0 && minutes == 0) {
+            //         console.log("masuk");
+            //         clearInterval(timer);
+            //     }
+            //     // Output the result in an element with id="demo"
+            //     document.getElementById("demo").innerHTML = hours + "Jam " + "  :  " + minutes + "Menit " + "  :  " + seconds + "Detik ";
+
+            //     // If the count down is over, write some text 
+            //     if (distance < 0) {
+            //         clearInterval(timer);
+            //         document.getElementById("demo").innerHTML = "EXPIRED";
+            //     }
+
+
+
+            // }, 1000);
+
+
+
+            $("#Gotopaydetail").click(function () {
+                // setResetInterval(true);
+                console.log('gotopaydetail');
+                window.location = "PaymentView.html";
+            });
+
+
+            // alert('masuk api')
+            document.getElementById('loaddot').style.display = 'block';
+            var jml = localStorage.getItem('jml');
+            var berangkat = localStorage.getItem('kebid');
+            //alert(berangkat);
+            var harga = sessionStorage.getItem('harga');
+            var nobooking = sessionStorage.getItem('nobooking');
+            var namakontak = sessionStorage.getItem('namakontak');
+            var telpkontak = sessionStorage.getItem('telpkontak');
+            var emailkontak = sessionStorage.getItem('emailkontak');
+            var pg = sessionStorage.getItem('pg');
+            var kode = sessionStorage.getItem('kode');
+            var fee = sessionStorage.getItem('fee');
+            $("#nobooking").text(nobooking);
+
+            // alert(jml)
+            // alert(berangkat)
+            // alert(harga)
+            // alert(nobooking)
+            // alert(namakontak)
+            // alert(telpkontak)
+            // alert(emailkontak)
+            // alert(pg)
+            // alert(kode)
+            // alert(fee)
+            if (pg == 706) { //indomaret
+                $("#imagelogo").append(
+                    '<img src="assets/images/icon/indomaret-logo.png">'
+                );
+            } else {
+                $("#imagelogo").append(
+                    '<img src="assets/images/icon/alfamart_logo.png">'
+                );
+            }
+
+
+            if (pg == '4') {
+                var link = 'faspayccredirect/?kode=' + kode + '&harga=' + harga + '&fee=' + fee + '&feebri=1500&kdbooking=' + nobooking + '&nama=' + namakontak + '&pg=4&jml=' + jml + '&brktid=' + berangkat + '&email=' + emailkontak + '&telp=' + telpkontak + '';
+                var url = 'https://www.rosalia-indah.co.id/web/'+link;
+            } else if (pg == 706 || pg == 707) {
+                console.log('masuk api', pg);
+                // document.getElementById('loaddot').style.display = 'none';
+                // var link = 'faspayredirect/?kode='+kode+'&harga='+harga+'&fee='+fee+'&kdbooking='+nobooking+'&nama='+namakontak+'&pg='+pg+'&jml='+jml+'&brktid='+berangkat+'&telp='+telpkontak+'';
+                var config = ApiAddressprodAndDev();
+                console.log('url', `${config}/mobiledev/ReguestTransaksi?kode=`+ kode + `&harga=` + harga + `&fee=` + fee + `&jml=` + jml + `&kdbooking=` + nobooking + `&nama=` + namakontak + `&pg=`+pg+`&brktid=`+berangkat +`&telp=`+telpkontak + ``)
+                $.ajax({
+                    type: "GET",
+                    // url: 'http://192.168.200.2:82/riis_prod_api/api/v1/mobile/ReguestTransaksi?kode=' + kode + '&harga=' + harga + '&fee=' + fee + '&jml=' + jml + '&kdbooking=' + nobooking + '&nama=' + namakontak + '&pg=' + pg + '&brktid=' + berangkat + '&telp=' + telpkontak + '',
+                    url: `${config}/mobiledev/ReguestTransaksi?kode=`+ kode + `&harga=` + harga + `&fee=` + fee + `&jml=` + jml + `&kdbooking=` + nobooking + `&nama=` + namakontak + `&pg=`+pg+`&brktid=`+berangkat +`&telp=`+telpkontak + ``,
+                    
+                    dataType: "json",
+                    success: function (response) {
+                        var transid =  response.trx_id;
+                        var bookingcode = response.booking_code;
+                        console.log('response', response)
+                        $("#numbercode").append(
+                            '<div>' + transid + '</div>'
+                        );
+                        $("#bookingcode").append(
+                            '<div>' + bookingcode + '</div>'
+                        );
+                        var hargaawal = response.harga_awal;
+                        var number_string = hargaawal.toString(),
+                            sisaawal = number_string.length % 3,
+                            rupiahawal = number_string.substr(0, sisaawal),
+                            ribuanawal = number_string.substr(sisaawal).match(/\d{3}/g);
+
+                        if (ribuanawal) {
+                            separator = sisaawal ? '.' : '';
+                            rupiahawal += separator + ribuanawal.join('.');
+                        }
+                        $("#hargaawal").append(
+                            '<div>' + 'RP.' + rupiahawal + '</div>'
+                        );
+                        var biayalain = response.biaya_lain;
+                        var number_string = biayalain.toString(),
+                            sisaadmin = number_string.length % 3,
+                            rupiahadmin = number_string.substr(0, sisaadmin),
+                            ribuanadmin = number_string.substr(sisaadmin).match(/\d{3}/g);
+
+                        if (ribuanadmin) {
+                            separator = sisaadmin ? '.' : '';
+                            rupiahadmin += separator + ribuanadmin.join('.');
+                        }
+                        $("#biayalain").append(
+                            '<div>' + 'RP.' + rupiahadmin + '</div>'
+                        );
+
+
+                        var total = parseInt(response.harga_awal) + parseInt(response.biaya_lain);
+                        var number_string = total.toString(),
+                            sisa = number_string.length % 3,
+                            rupiah = number_string.substr(0, sisa),
+                            ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+                        if (ribuan) {
+                            separator = sisa ? '.' : '';
+                            rupiah += separator + ribuan.join('.');
+                        }
+                        $("#total").append(
+                            '<div>' + 'RP.' + rupiah + '</div>'
+                        );
+                        console.log('total', rupiah)
+
+                        SenderSMS(transid,bookingcode, rupiah, telpkontak)
+                        // timecoldown();
+                        setTimeout(function () {
+                            document.getElementById('loaddot').style.display = 'none';
+
+                        }, 1000);
+
+
+                    }
+                });
+                $.ajax({
+                    type: "GET",
+                    // url: 'http://192.168.200.2:82/riis_prod_api/api/v1/mobile/gettimelimit?nobooking=' + nobooking + '&nohp=' + telpkontak + '&kebid=' + berangkat + '',
+                    url: `${config}/mobiledev/gettimelimit?nobooking=`+nobooking+`&nohp=`+telpkontak+`&kebid=`+berangkat+``,
+                    dataType: "json",
+                    success: function (response) {
+                        // console.log(response.data[0].tgl_penjualan)
+                        var time = response.data[0].time_limit
+                        var dt = new Date(time);
+                        $('#timelimit ').append(
+                            '<p>' + moment(time).format('HH:mm:ss') + '</p>'
+
+                        )
+                        // var finaltime = date(time, strtotime("+120 minutes"));
+                        console.log('finaltime', moment(time).format('h:mm:ss'))
+                    }
+                });
+
+                //sms booking code 
+                // $.ajax({
+                //     type: "POST",
+				// 	url: `${config}/mobile/SmsCode`,
+				// 	data: { nobooking: nobooking, nohp: telpkontak,  },
+				// 	dataType: "json",
+                //     success: function (response) {
+                       
+                //     }
+                // });
+            } else {
+                var link = 'faspayredirect/?kode=' + kode + '&harga=' + harga + '&fee=' + fee + '&kdbooking=' + nobooking + '&nama=' + namakontak + '&pg=' + pg + '&jml=' + jml + '&brktid=' + berangkat + '&telp=' + telpkontak + '';
+                var url = 'https://www.rosalia-indah.co.id/web/'+link;
+            }
+
+            // var url = 'https://www.rosalia-indah.co.id/web/'+link;
+
+        });
+
+        function SenderSMS(transid, bookingcode, rupiah,telpkontak){
+            console.log(transid)
+            console.log(bookingcode)
+            console.log(rupiah)
+            console.log(telpkontak)
+            //  sms booking code 
+            var config = ApiAddressprodAndDev();
+            document.getElementById('loaddot').style.display = 'none';
+                $.ajax({
+                    type: "POST",
+					url: `${config}/mobiledev/SmsCode`,
+					data: {transid: transid, bookingcode: bookingcode, telpkontak: telpkontak, rupiah:rupiah,  },
+					dataType: "json",
+                    success: function (response) {
+                       
+                    }
+                });
+        }
+
+
+       
+    </script>
+</head>
+
+<body class="bg_only">
+    <nav class="navbar bg-maroon navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+                <i onclick="pay_back()"></i>
+            </div>
+        </div>
+    </nav>
+    <!-- <a class="step-step">Langkah-langkah melakukan pembayaran</a> -->
+    <div class="container">
+
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <!-- <div class="color-block-wrapper"> -->
+                <div class="color-block color-block-lblue color-block-icon-list time-limit">
+                    <div class="color-block-head">
+                        <div class="image-time"><img src="assets/images/icon/time.png"></div>
+                        Lakukan pembayaran sebelum
+                    </div>
+                    <div class="color-block-head-number-code" id="timelimit">
+
+                    </div>
+                </div>
+                <!-- </div> -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <!-- <div class="color-block-wrapper"> -->
+                <div class="color-block color-block-lblue color-block-icon-list time-limit booking-code">
+                    <div class="color-block-head">
+                        <div class="image-time"><img src="assets/images/icon/booking-code.png"></div>
+                        Kode booking anda
+                    </div>
+                    <div class="color-block-head-number-code" id="bookingcode">
+
+                    </div>
+                </div>
+                <!-- </div> -->
+            </div>
+        </div>
+
+        <div class="content-pay">
+            <div class="step-step">Langkah-langkah melakukan pembayaran</div>
+            <div class="circlestep dotbgstep">1</div>
+            <div class="step-by-step">Tunjukkan kode pembayaran kepada kasir</div>
+        </div>
+        <!-- <div class="container"> -->
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="color-block-wrapper">
+                    <div class="no-tiket color-block-lblue color-block-icon-list">
+                        <div class="color-block-head-code">
+                            <div class="image-time"><img src="assets/images/icon/kode.png"></div>
+                            <div class="image-alfa" id="imagelogo"></div>
+                            Kode Pembayaran anda
+                        </div>
+                        <div class="color-block-head-number-code" id="numbercode">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <span class="step">2</span> -->
+        <div class="form-ket">
+            <div class="circledot dotbg"></div>
+            <span class="step-by-stepdot">Tunjukkan kode pembayaran anda ke kasir</span>
+            <div class="circledot2 dotbg2"></div>
+            <span class="step-by-stepdot2">Biaya tambahan sebesar Rp 5.000/transaksi</span>
+            <div class="circledot3 dotbg3"></div>
+            <span class="step-by-stepdot3">Biaya tambahan bisa berubah tanpa pemberitahuan</span>
+            <div class="circledot3 dotbg3"></div>
+            <span class="step-by-stepdot3">Simpan struk anda sebagai bukti pembayaran yang sah</span>
+            <div class="circlestep2 dotbgstep2">2</div>
+            <div class="step-by-step2">Biaya yang harus dibayarkan</div>
+            <!-- <div class="circlestep3 dotbgstep3">3</div>
+                <div class="step-by-step3">Konfirmasi pembayaran</div> -->
+
+        </div>
+        <!-- </div> -->
+        <!-- <div class="container"> -->
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="color-block-wrapper">
+                    <div class="nominal color-block-lblue color-block-icon-list">
+                        <div class="color-block-head-code">
+                            <div class="image-time"><img src="assets/images/icon/pay.png"></div>
+                            Pembelian tiket
+                        </div>
+                        <div class="color-block-head-number-code" id="hargaawal">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- </div> -->
+
+        <!-- <div class="container"> -->
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="color-block-wrapper">
+                    <div class="admin-pay color-block-lblue color-block-icon-list">
+                        <div class="color-block-head-code">
+                            <!-- <div class="image-time"><img src="assets/images/icon/pay.png"></div> -->
+                            Biaya admin
+                        </div>
+                        <div class="color-block-head-number-code" id="biayalain">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- </div> -->
+        <!-- <div class="container"> -->
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="color-block-wrapper">
+                    <div class="total-harga color-block-lblue color-block-icon-list">
+                        <div class="color-block-head-code">
+                            <!-- <div class="image-time"><img src="assets/images/icon/pay.png"></div> -->
+                            Harga total
+                        </div>
+                        <div class="color-block-head-number-code" id="total">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- </div> -->
+        </div>
+        <div class="circlestep-permata-confirm dotbgstep-permata">3</div>
+        <div class="step-by-step-permata">Konfirmasi pembayaran</div>
+        <div class="circlestep-permata-confirm1 dotbgstep-permata1 alfa-pad" style="visibility: hidden;"></div>
+    </div>
+
+    <div class="navbar-fixed-bottom">
+        <div class="confirm-payment">
+            <h1 class="txt-pay-konfirm">Segera lakukan konfirmasi pembayaran setelah anda melakukan pembayaran tiket
+                tersebut</h1>
+        </div>
+        <div class="btn-group btn-group-justified">
+            <a class="btn btn-lg btn-grey btn-block" id="Gotopaydetail">Detail transaksi</a>
+        </div>
+    </div>
+    <div class="modalbox" id="loaddot" style="display: block;">
+        <div class="box">
+            <div class="preloader">
+                <div class="circ1"></div>
+                <div class="circ2"></div>
+                <div class="circ3"></div>
+            </div>
+        </div>
+
+
+
+
+
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+        <script type="text/javascript" src="assets/theme/js/style.js"></script>
+
+</body>
+
+</html>

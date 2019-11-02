@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport"
+        content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+    <title>Rosalia Indah Transport</title>
+
+    <link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+    <!-- js-Query -->
+    <script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/theme/js/jquery.maskedinput.min.js"></script>
+    <!-- <script src="https://raw.githubusercontent.com/igorescobar/jQuery-Mask-Plugin/master/src/jquery.mask.js"></script> -->
+    <script type="text/javascript" src="assets/theme/js/config.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#no_hp')
+
+	.keydown(function (e) {
+		var key = e.charCode || e.keyCode || 0;
+		$phone = $(this);
+
+		// Auto-format- do not expose the mask as the user begins to type
+		if (key !== 8 && key !== 9) {
+			if ($phone.val().length === 4) {
+				$phone.val($phone.val() + '-');
+			}
+			// if ($phone.val().length === 5) {
+			// 	$phone.val($phone.val() + '-');
+			// }			
+			if ($phone.val().length === 9) {
+				$phone.val($phone.val() + '-');
+			}
+            if ($phone.val().length === 14) {
+				$phone.val($phone.val() + '-');
+			}
+            
+		}
+
+		// Allow numeric (and tab, backspace, delete) keys only
+		return (key == 8 || 
+				key == 9 ||
+                key == 13 ||
+				key == 46 ||
+				(key >= 48 && key <= 57) ||
+				(key >= 96 && key <= 105));	
+	})
+	
+	// .bind('focus click', function () {
+	// 	$phone = $(this);
+		
+	// 	if ($phone.val().length === 0) {
+	// 		$phone.val('(');
+	// 	}
+	// 	else {
+	// 		var val = $phone.val();
+	// 		$phone.val('').val(val); // Ensure cursor remains at the end
+	// 	}
+	// })
+	
+	// .blur(function () {
+	// 	$phone = $(this);
+		
+	// 	if ($phone.val() === '(') {
+	// 		$phone.val('');
+	// 	}
+	// });
+
+            // $.mask.definitions['~'] = '[+-]';
+            //  $('.input-mask-phone').mask("(99) 9999-9999");
+            $('#check').hide();
+        });
+
+        function DaftarEvent() {
+            window.location.href = "Daftarevent.html"
+        }
+
+        
+        function createMask(string){
+  console.log(string)
+	return string.replace(/(\d{4})(\d{4})(\d{4})(\d{4})/,"$1-$2-$3");
+}
+
+function destroyMask(string){
+  console.log(string)
+	return string.replace(/\D/g,'').substring(0, 8);
+}
+        function IkutKuis() {
+
+            var nb1 = $('#kd_pendaftaran').val();
+            var nb2 = $('#no_hp').val();
+            // var nohp  = createMask($('#no_hp').val());
+           
+            // alert(nb2)
+
+            // umur
+            var age;
+            $("input:checkbox[name='chkage']:checked").each(function () {
+                age = $(this).val();
+            });
+
+
+            //join member
+            var joinmember;
+            $("input:checkbox[name='chkJoin']:checked").each(function () {
+                joinmember = $(this).val();
+            });
+
+            //no identitas
+            var idt;
+            $("input:checkbox[name='IDT']:checked").each(function () {
+                idt = $(this).val();
+            });
+
+            if (nb1 == '') {
+                var x = document.getElementById("kddaftar");
+                x.className = "show";
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            } else if (nb2 == '') {
+                var x = document.getElementById("nohp");
+                x.className = "show";
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            } else if (age == '') {
+                var x = document.getElementById("age");
+                x.className = "show";
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            } else if (joinmember == '') {
+                var x = document.getElementById("join");
+                x.className = "show";
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            } else if (idt == '') {
+                var x = document.getElementById("idt");
+                x.className = "show";
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            } else {
+                
+                document.getElementById('loaddot').style.display = 'block';
+                var datas = [
+                    {
+                        "kode_daftar": nb1,
+                        "telp": nb2,
+                        "dewasa": age,
+                        "is_id": idt,
+                        "is_register_member": joinmember
+                    },
+
+                ];
+                console.log(datas)
+                var config = ApiAddressprodAndDev();
+                $.ajax({
+                    type: "POST",
+                    url: `${config}/event/add_validateEvnt`,
+                    data: JSON.stringify(datas),
+                    //contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        // alert(response.core)
+                        document.getElementById('loaddot').style.display = 'none';
+                        if (response.success == true && response.isnumber != '') {
+
+                            document.getElementById('codeevent').style.display = 'block';
+                            document.getElementById('nohandphone').style.display = 'block';
+                            $('#nohandphone').html('<div class="heart-group header-undian">' +
+                                '<span class="txt-info">Anda sudah pernah mengisi biodata sebelumnya! berikut adalah kode undian anda:</span>' +
+                                '<br/>' +
+                                '</div>');
+                            $('#noundian').html('<h2>' + response.isnumber + '</h2>' +
+                                '<h1>Kode undian anda</h1>');
+                        } else if (response.success == true && response.isnumber == '') {
+                            sessionStorage.setItem('core', response.core);
+                            sessionStorage.setItem('no_hp', nb2);
+                            window.location = "kuisevent.html";
+                        } else {
+                            var x = document.getElementById("failedresponce");
+                            x.className = "show";
+                            setTimeout(function () { x.className = x.className.replace("show", ""); }, 7000);
+                        }
+
+                    },
+                    error: function (error) {
+                        setTimeout(function () {
+                            document.getElementById('loaddot').style.display = 'none';
+                        }, 1000);
+                        var x = document.getElementById("faileddata");
+                        x.className = "show";
+                        setTimeout(function () { x.className = x.className.replace("show", ""); }, 7000);
+                    }
+                });
+
+            }
+
+
+
+        }
+
+        function backevent() {
+            window.location = "pesan.html";
+        }
+        document.addEventListener("deviceready", onDeviceReady, false);
+        function onDeviceReady() {
+            document.addEventListener("backbutton", function (e) {
+                e.preventDefault();
+            }, false);
+        }
+    </script>
+</head>
+
+<body class="">
+
+    <nav class="navbar bg-maroon navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+                <!-- <a href="index.html" class="home-icon">
+					<i class="fa fa-arrow-circle-left fa-2x mt-2"></i>
+				</a> -->
+            </div>
+        </div>
+        <div id="kddaftar" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            Silahkan masukkan kode pendaftaran</div>
+        <div id="nohp" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            Silahkan masukkan no handphone</div>
+        <div id="age" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            Sudah 17 tahun atau lebih wajib diisi</div>
+        <div id="join" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            KTP/SIM yang dapat ditunjukkan wajib diisi</div>
+        <div id="idt" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            bergabung dengan member RI Plus wajib diisi</div>
+        <div id="failedresponce" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            Kode pendaftaran anda belum terdaftar</div>
+    </nav>
+
+    <div class="head-center">
+        <div class="panel-body-event">
+            <div class="alert-mc alert-warning info-event">
+                Belum mendapatkan kode pendaftaran? silahkan daftar terlebih dahulu.
+            </div>
+            <div class="modal-header ">
+               
+                <img onclick="DaftarEvent()" src="assets/images/event.jpeg" width="310" />
+            </div>
+            <div class="form-group text-right">
+                <!-- <img src="assets/images/icon/loading.gif" id="check" style="width: 80px;"/ > -->
+                <a class="btn btn-red" onclick="DaftarEvent()">Daftar</a>
+            </div>
+            <form id="reserved">
+
+                <div class="form-space">
+                    <label class="control-label lighther" for="kdBook"><span class="text-danger"> * </span>Kode
+                        pendaftaran :
+                    </label>
+                    <input type="text" id="kd_pendaftaran" class="form-control"
+                        placeholder="Masukan Kode pendaftaran"><span class="bar-blue"></span>
+                </div>
+
+                <div class="form-space">
+                    <label class="control-label lighther" for="kdBook"><span class="text-danger"> * </span>No. Hp :
+                    </label>
+                    <input type="text" id="no_hp" name="no_hp" class="form-control "
+                    placeholder="XXXX-XXXX-XXXX"  maxlength="16"><span
+                        class="bar-blue"></span>
+                </div>
+                <!-- <div class="form-space">
+                    <label class="control-label lighther" for="kdBook"><span class="text-danger"> * </span>Email :
+                    </label>
+                    <input type="text" id="hpBook" class="form-control input-mask-phone"
+                        placeholder="Masukan alamat email" minlength="11" maxlength="12"><span class="bar-blue"></span>
+                </div>
+                <div class="form-space">
+                    <label class="control-label lighther" for="kdBook"><span class="text-danger"> * </span>Tanggal lahir
+                        : </label>
+                    <input type="text" id="hpBook" class="form-control input-mask-phone"
+                        placeholder="Masukan tanggal lahir" minlength="11" maxlength="12"><span class="bar-blue"></span>
+                </div> -->
+                <!-- <div class="form-space" style="list-style:none;">
+                    <label class="control-label lighther" for=""><span class="text-danger"> * </span>Dapat menunjukkan
+                        tanda identitas: </label>
+                    <input type="radio" name="IDT" value="1" checked="checked"><span>KTP</span></input>
+                    <input type="radio" name="IDT" value="2">SIM</input>
+                </div> -->
+
+                <div class="checkbox">
+                    <label><input type="checkbox" id="chkage" value="1" name="chkage"> <span class="text-left">Sudah 17
+                            tahun atau lebih</span></label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" id="IDT" value="1" name="IDT"> <span class="text-left">Memiliki
+                            KTP/SIM yang
+                            dapat ditunjukkan</span></label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" id="chkJoin" value="1" name="chkJoin"> <span class="text-left">Ingin
+                            bergabung
+                            dengan member RI Plus</span></label>
+                </div>
+                <div id="nohandphone" class="card-txt" style="display:none">
+
+                </div>
+                <div id="codeevent" class="card" style="display:none">
+                    <div class="heart-group">
+                        <div class="circle-ripple"></div>
+                        <div class="heart">
+                            <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="22"
+                                viewBox="0 0 24 22">
+                                <path fill="#FFF" fill-rule="evenodd" transform="translate(-16 -25)" />
+                            </svg>
+                        </div>
+                    </div>
+        
+                    <div id="noundian">
+        
+        
+        
+                    </div>
+                </br>
+            </br>
+                </div>
+                <div class="step-content " id="kembalibtn">
+                    <button type="button" onclick="IkutKuis()" class="close-btn">Lanjutkan</button>
+                </div>
+                <div class="step-content " id="">
+                    <a href="index.html" class="close-btn-back">Kembali</a>
+                </div>
+                <!-- <div class="form-group text-right">
+                    
+                    <a class="btn btn-red" onclick="IkutKuis()">Ikuti kuis</a>
+                </div> -->
+            </form>
+        </div>
+
+
+        
+        
+
+    </div>
+
+    <div class="modalbox" id="loaddot" style="display: none;">
+        <div class="box">
+            <div class="preloader">
+                <div class="circ1"></div>
+                <div class="circ2"></div>
+                <div class="circ3"></div>
+            </div>
+        </div>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+        <script type="text/javascript" src="assets/theme/js/style.js"></script>
+
+</body>
+
+</html>
+<style>
+    .card {
+        position: relative;
+        width: 200px;
+        height: 100px;
+        background: #ee462b;
+        box-shadow: 0 7px 8px -4px rgba(148, 13, 0, 0.20), 0 12px 17px 2px rgba(148, 13, 0, 0.14), 0 5px 22px 4px rgba(148, 13, 0, 0.12);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-left: 15px;
+    }
+
+    .card-txt {
+        position: relative;
+        width: 250px;
+        height: 50px;
+        margin-top: 20px;
+        background: #fcfcfc;
+        /* box-shadow: 0 7px 8px -4px rgba(148, 13, 0, 0.20), 0 12px 17px 2px rgba(148, 13, 0, 0.14), 0 5px 22px 4px rgba(148, 13, 0, 0.12);
+    border-radius: 10px; */
+        overflow: hidden;
+        margin-left: 15px;
+    }
+
+    .heart {
+        position: relative;
+        margin-top: 25px;
+        margin-left: 16px;
+    }
+
+    .heart-icon {
+        fill: #fff;
+        animation: beat 0.35s infinite alternate;
+        transform-origin: center;
+    }
+
+    .circle-ripple {
+        position: absolute;
+        left: 24px;
+        top: 20.5px;
+        background-color: #fff;
+        width: 0.5em;
+        height: 0.5em;
+        border-radius: 50%;
+        animation: ripple 0.7s linear infinite;
+    }
+
+    h2 {
+        display: inline-block;
+        font-size: 20px;
+        color: #fff;
+        letter-spacing: 0.52px;
+        line-height: 34px;
+        margin-top: -10px;
+        font-weight: 300;
+        margin-left: 16px;
+        margin-bottom: 0;
+        z-index: 2;
+        position: relative;
+    }
+
+    p {
+        font-size: 16px;
+        color: rgba(235, 235, 245, 0.60);
+        letter-spacing: -0.32px;
+        line-height: 21px;
+        margin-top: 6px;
+        margin-left: 16px;
+        margin-bottom: 0;
+        z-index: 2;
+        position: relative;
+    }
+
+    h1 {
+        font-size: 14px;
+        color: #fff;
+        letter-spacing: -0.41px;
+        line-height: 22px;
+        margin-top: 0px;
+        margin-left: 16px;
+        margin-bottom: 0;
+        font-weight: 600;
+        z-index: 2;
+        position: relative;
+    }
+
+    @keyframes ripple {
+        0% {
+            box-shadow: 0 0 0 0 rgba(148, 13, 0, 0.15), 0 0 0 1em rgba(148, 13, 0, 0.15), 0 0 0 5em rgba(148, 13, 0, 0.15), 0 0 0 10em rgba(148, 13, 0, 0.15);
+        }
+
+        100% {
+            box-shadow: 0 0 0 1em rgba(148, 13, 0, 0.15), 0 0 0 5em rgba(148, 13, 0, 0.15), 0 0 0 10em rgba(148, 13, 0, 0.15), 0 0 0 12em rgba(148, 13, 0, 0);
+        }
+    }
+
+    @keyframes beat {
+        to {
+            transform: scale(1.4);
+        }
+    }
+
+    .txt-info {
+        font-size: 12px;
+        margin-top: -20px;
+    }
+
+    .close-btn {
+        /* position: absolute;
+    top: 50%;
+    left: 80%; */
+        border: 0;
+        margin-top: 70px;
+        margin-left: 20px;
+        width: 90%;
+        padding: 10px;
+        border-radius: 4px;
+        background-color: #a93226;
+        box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.3);
+        color: #FFF;
+        transition: background-color 0.3s ease-in-out;
+        cursor: pointer;
+        /* transform: translate(-50%, -50%); */
+    }
+
+    .close-btn-back {
+        border: 0;
+        margin-top: 20px;
+        margin-left: 20px;
+        width: 90%;
+        padding: 10px 38%;
+        border-radius: 4px;
+        position: absolute;
+        background-color: #a93226;
+        box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.3);
+        color: #FFF;
+        transition: background-color 0.3s ease-in-out;
+        cursor: pointer;
+    }
+</style>

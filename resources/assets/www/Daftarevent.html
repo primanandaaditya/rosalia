@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport"
+        content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+    <title>Rosalia Indah Transport</title>
+
+    <link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+    <!-- js-Query -->
+    <script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/theme/js/jquery.maskedinput.min.js"></script>
+    <script type="text/javascript" src="assets/theme/js/config.js"></script>
+    <script type="text/javascript" src="assets/session/jstorage.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+//             $('#no_hp')
+
+// .keydown(function (e) {
+//     var key = e.charCode || e.keyCode || 0;
+//     $phone = $(this);
+
+    // Auto-format- do not expose the mask as the user begins to type
+//     if (key !== 8 && key !== 9) {
+//         if ($phone.val().length === 4) {
+//             $phone.val($phone.val() + '-');
+//         }
+//         // if ($phone.val().length === 5) {
+//         // 	$phone.val($phone.val() + '-');
+//         // }			
+//         if ($phone.val().length === 9) {
+//             $phone.val($phone.val() + '-');
+//         }
+//         if ($phone.val().length === 14) {
+//             $phone.val($phone.val() + '-');
+//         }
+        
+//     }
+
+//     // Allow numeric (and tab, backspace, delete) keys only
+//     return (key == 8 || 
+//             key == 9 ||
+//             key == 13 ||
+//             key == 46 ||
+//             (key >= 48 && key <= 57) ||
+//             (key >= 96 && key <= 105));	
+// })
+
+            var config = ApiAddressprodAndDev();
+
+            $('#acceptmember').change(function () {
+                if ($(this).is(":checked")) {
+                    $("#inputnomember").show();
+                } else {
+                    $("#inputnomember").hide();
+                }
+
+            });
+            $.mask.definitions['~'] = '[+-]';
+            $('.input-mask-date').mask('99/99/9999');
+            $('.input-mask-tiket').mask('9');
+            $('.input-mask-idt').mask('9999-9999-9999-9999', { autoclear: false, placeholder: "" });
+            $('.input-mask-phone').mask('9999-9999-9999-9', { autoclear: false, placeholder: "" });
+            $('#check').hide();
+
+            var memberid = $.jStorage.get('memberid', '');
+            console.log(memberid)
+            if (memberid !== '') {
+                document.getElementById('checkednomember').style.display = 'none';
+                $.ajax({
+                    type: "GET",
+                    url: `${config}/event/getmymember/` + memberid,
+                    //data: JSON.stringify(datas),
+                    //contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        document.getElementById('loaddot').style.display = 'none';
+                        if (response.status == true) {
+                            $("#nm_lengkap").val(response.data.nama_member);
+                            $("#tgl_lahir").val(response.data.tgl_lahir_member);
+                            $("#identitas").val(response.data.identitas_member);
+                            $("#no_hp").val(response.data.no_telp);
+                            $("#email").val(response.data.email);
+                            $('input[name="genderS"][value="' + response.data.Jenis_kelamin + '"]').prop('checked', true);
+                        } else {
+                            var x = document.getElementById("failedresponce");
+                            x.className = "show";
+                            setTimeout(function () { x.className = x.className.replace("show", ""); }, 7000);
+                        }
+
+                    },
+                    error: function (error) {
+                        setTimeout(function () {
+                            document.getElementById('loaddot').style.display = 'none';
+                        }, 1000);
+                        var x = document.getElementById("faileddata");
+                        x.className = "show";
+                        setTimeout(function () { x.className = x.className.replace("show", ""); }, 7000);
+                    }
+                });
+            }
+
+
+
+
+        });
+
+
+        function createMask(string){
+  console.log(string)
+	return string.replace(/(\d{4})(\d{4})(\d{4})/,"$1-$2-$3");
+}
+function createMaskIDT(string){
+  console.log(string)
+	return string.replace(/(\d{4})(\d{4})(\d{4})(\d{4})/,"$1-$2-$3");
+}
+
+function destroyMask(string){
+  console.log(string)
+	return string.replace(/\D/g,'').substring(0, 8);
+}
+        function DaftarEvent() {
+            var nb1 = $('#nm_lengkap').val();
+            var nb2 = $('#tgl_lahir').val();
+            var nb3 = $('#identitas').val();
+            var nb4 = $('#no_hp').val();
+            var nb5 = $('#email').val();
+            var nb6 = $('#jml_tiket').val();
+            var nb7 = $('#no_member').val();
+            var ele = document.getElementsByName('genderS');
+            var val;
+            for (i = 0; i < ele.length; i++) {
+                if (ele[i].checked)
+                    val = ele[i].value;
+            }
+            // alert(nb6)
+           var nohp  = createMask($("input[name='no_hp']").val());
+           var identitasid  = createMaskIDT($("input[name='identitas']").val());
+        //    alert(nohp)
+            // $.mask.definitions['~'] = '[+-]';
+            // alert(nb4.mask('9999-9999-9999', { autoclear: false, placeholder: "" }))
+            if (nb1 == '') {
+                var x = document.getElementById("nama");
+                x.className = "show";
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            } else if (nb2 == '') {
+                var x = document.getElementById("tglLahir");
+                x.className = "show";
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+
+            } else if (nb4 == '') {
+                var x = document.getElementById("nohp");
+                x.className = "show";
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+
+            } else if (nb6 == '') {
+                var x = document.getElementById("jmltiket");
+                x.className = "show";
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            } else if (val == '' || val == 'undefined' || val == undefined) {
+                var x = document.getElementById("jnskelamin");
+                x.className = "show";
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            } else {
+                document.getElementById('loaddot').style.display = 'block';
+                var datas = [
+                    {
+                        "namalengkap": nb1,
+                        "nohp": nohp,
+                        "Alamatemail": nb5,
+                        "Tanggallahir1": nb2,
+                        "noid": identitasid,
+                        "sebutan": "",
+                        "memberID": nb7,
+                        "JenisKelamin": val,
+                        "tikets": nb6
+                    },
+
+                ];
+                console.log(datas)
+                var config = ApiAddressprodAndDev();
+                $.ajax({
+                    type: "POST",
+                    url: `${config}/event/add_event`,
+                    data: JSON.stringify(datas),
+                    //contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        document.getElementById('loaddot').style.display = 'none';
+                        if (response.success == true) {
+                            navigator.notification.confirm(
+                                'Terima kasih telah mendaftar! \n\n Catat kode pendaftaran anda : ' + response.data + ' \n\n Kode pendaftaran sudah kami kirim ke ' + nb4 + ' \n\n Sampai jumpa di event RIT!',  // message
+                                onConfirm,              // callback to invoke with index of button pressed
+                                'Kode pendaftaran',            // title
+                                'Ok,Cancel'          // buttonLabels
+                            );
+                        } else {
+                            var x = document.getElementById("failedresponce");
+                            x.className = "show";
+                            setTimeout(function () { x.className = x.className.replace("show", ""); }, 7000);
+                        }
+
+                    },
+                    error: function (error) {
+                        setTimeout(function () {
+                            document.getElementById('loaddot').style.display = 'none';
+                        }, 1000);
+                        var x = document.getElementById("faileddata");
+                        x.className = "show";
+                        setTimeout(function () { x.className = x.className.replace("show", ""); }, 7000);
+                    }
+                });
+
+            }
+            function onConfirm(button) {
+                if (button == 1) {//ok
+                    window.location = "event.html";
+                } else {
+
+                }
+            }
+
+
+        }
+
+    </script>
+</head>
+
+<body class="">
+
+    <nav class="navbar bg-maroon navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+                <!-- <a href="event.html" class="home-icon">
+					<i class="fa fa-arrow-circle-left fa-2x mt-2"></i>
+				</a> -->
+            </div>
+        </div>
+        <div id="nama" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            Silahkan masukkan <span>nama</span></div>
+        <div id="tglLahir" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            Silahkan masukan <span>tanggal</span> lahir</div>
+        <div id="idt" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            Silahkan masukan no identitas</div>
+        <div id="nohp" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            Silahkan masukan no hanphone</div>
+        <div id="eml" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            Silahkan masukan email</div>
+        <div id="jmltiket" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            Silahkan masukan jumah tiket</div>
+        <div id="jnskelamin" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            Silahkan masukan jenis kelamin</div>
+        <div id="faileddata" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            Terjadi kesalahan pada server</div>
+        <div id="failedresponce" class="close"
+            style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+            Tidak mendapatkan kode! coba lagi nanti!</div>
+    </nav>
+
+    <div class="head-center">
+        <div class="panel-body-event">
+            <div class="alert-mc alert-warning info-event">
+                <center><b>Hadiri dan saksikan secara langsung, launching Bus Double Decker Rosalia Indah Transport</b>
+                </center>
+                <!-- <center><b>Sudah member RI Plus?</b></center> -->
+                <center><b>Minggu,29 September 2019 , mulai pukul 09:00 hingga selesai.</b></center>
+                <center><b>Lokasi : De Tjolomadoe, Solo</b></center>
+            </div>
+            <form id="reserved">
+
+                <div class="form-space">
+                    <label class="control-label lighther" for="nm_lengkap"><span class="text-danger"> * </span>Nama :
+                    </label>
+                    <input type="text" id="nm_lengkap" class="form-control" placeholder="Masukan nama"><span
+                        class="bar-blue"></span>
+                </div>
+                <div class="form-space">
+                    <label class="control-label lighther" for="tgl_lahir"><span class="text-danger"> * </span>Tanggal
+                        lahir
+                        : </label>
+                    <input type="text" id="tgl_lahir" class="form-control input-mask-date"
+                        placeholder="tgl/bln/thn"><span class="bar-blue"></span>
+                </div>
+                <div class="form-space">
+                    <label class="control-label lighther" for="identitas"><span> </span>Kartu
+                        identitas
+                        : </label>
+                    <input type="text" id="identitas" name="identitas" class="form-control input-mask-idt"
+                        placeholder="KTP/SIM"><span class="bar-blue"></span>
+                </div>
+                <div class="form-space">
+                    <label class="control-label lighther" for="no_hp"><span class="text-danger"> * </span>No. Hp :
+                    </label>
+                    <input type="text" id="no_hp" name="no_hp" class="form-control input-mask-phone"
+                        placeholder="Masukan nomor handphone" minlength="14" maxlength="15"><span
+                        class="bar-blue"></span>
+                </div>
+                <div class="form-space">
+                    <label class="control-label lighther" for="email"><span> </span>Email :
+                    </label>
+                    <input type="text" id="email" class="form-control" placeholder="Masukan alamat email"><span
+                        class="bar-blue"></span>
+                </div>
+                <div class="form-space">
+                    <label class="control-label lighther" for="jml_tiket"><span class="text-danger"> * </span>Jumlah
+                        tiket:
+                    </label>
+                    <select class="control-label lighther" id="jml_tiket">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+                <div class="form-space">
+                    <label class="control-label lighther" for=""><span class="text-danger"> * </span>Jenis
+                        kelamin: </label>
+                    <input type="radio" name="genderS" value="1">Pria</input>
+                    <input type="radio" name="genderS" value="2">Wanita</input>
+                </div>
+                <div class="checkbox" id="checkednomember" style="display:block;">
+                    <label><input type="checkbox" id="acceptmember"> <span class="text-left">Sudah
+                            Member RI Plus?</span></label>
+                </div>
+                <div class="form-space" id="inputnomember" style="display:none;">
+                    <label class="control-label lighther" for="no_member"><span class="text-danger"> * </span>No member:
+                    </label>
+                    <input type="text" id="no_member" class="form-control" placeholder="Masukan no member"><span
+                        class="bar-blue"></span>
+                </div>
+                <div class="form-group text-right">
+                    <!-- <img src="assets/images/icon/loading.gif" id="check" style="width: 80px;"/ > -->
+                    <a class="btn btn-red" onclick="DaftarEvent()">Daftar</a>
+                </div>
+            </form>
+        </div>
+
+
+
+    </div>
+    <div class="modalbox" id="loaddot" style="display: none;">
+        <div class="box">
+            <div class="preloader">
+                <div class="circ1"></div>
+                <div class="circ2"></div>
+                <div class="circ3"></div>
+            </div>
+        </div>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+        <script type="text/javascript" src="assets/theme/js/style.js"></script>
+
+</body>
+
+</html>

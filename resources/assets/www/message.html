@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+	<title>Rosalia Indah Transport</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="assets/loading/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+	<!-- js-Query -->
+	<script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/theme/js/main.js"></script>
+
+	<!-- <script type="text/javascript" src="plugins/cordova-plugin-email-composer/www/email_composer"></script> 	 -->
+	<script type="text/javascript">
+		// $('#confirmsukses').modal('show');
+		$(function () {
+			// var regExp = /^\w*(\.\w*)?@\w*\.[a-z]+(\.[a-z]+)?$/;
+			var regExp = /^([\w\.\+]{1,})([^\W])(@)([\w]{1,})(\.[\w]{1,})+$/;
+
+			$('[type="email"]').on('keyup', function () {
+				$('.message').hide();
+				regExp.test($(this).val()) ? $('.message.success').show() : $('.message.error').show();
+			});
+
+		});
+
+		function onConfirm(button) {
+			// if (button == 1) {//ok
+			// 	window.location = "index.html";
+			// }
+		}
+
+		function send() {
+			var nb1 = $('#email').val();
+			var nb2 = $('textarea#message').val();
+			if (nb1 == '' || nb2 == '') {
+				var x = document.getElementById("failed");
+				x.className = "show";
+				setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+
+			} else {
+				document.getElementById('loaddot').style.display = 'block';
+				$.ajax({
+					type: "GET",
+					url: "https://rosalia-indah.co.id/web/website/email/kirim2",
+					data: { email: nb1, message: nb2 },
+					dataType: "json",
+					success: function (response) {
+						console.log(response)
+						document.getElementById('loaddot').style.display = 'none';
+						// $('#email').val('');
+						// $('textarea#message').val('');
+						// $('#confirmsukses').modal('show');
+						// $('#loading').hide();
+						navigator.notification.confirm(
+							'	Terima kasih, Saran anda telah terkirim.',  // message
+							onConfirm,              // callback to invoke with index of button pressed
+							'',            // title
+							'Ok'          // buttonLabels
+						);
+					},
+
+					error: function (error) {
+						document.getElementById('loaddot').style.display = 'none'
+						console.log(error)
+						// $('#confirmsukses').modal('show')
+						navigator.notification.confirm(
+							'	Terima kasih, Saran anda telah terkirim.',  // message
+							onConfirm,              // callback to invoke with index of button pressed
+							'',            // title
+							'Ok'          // buttonLabels
+						);
+					}
+				});
+			}
+
+		}
+		document.addEventListener("deviceready", onDeviceReady, false);
+		function onDeviceReady() {
+			document.addEventListener("backbutton", function (e) {
+				e.preventDefault();
+			}, false);
+		}
+
+
+	</script>
+</head>
+
+<body>
+
+	<div id="loading" style="display: none;">
+		<div id="loading-center">
+			<div id="loading-center-absolute">
+				<div class="object" id="object_one"></div>
+				<div class="object" id="object_two"></div>
+				<div class="object" id="object_three"></div>
+				<div class="object" id="object_four"></div>
+				<div class="object" id="object_five"></div>
+				<div class="object" id="object_six"></div>
+				<div class="object" id="object_seven"></div>
+				<div class="object" id="object_eight"></div>
+				<div class="object" id="object_nine"></div>
+			</div>
+		</div>
+	</div>
+
+	<nav class="navbar bg-maroon navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+			</div>
+		</div>
+		<div id="failed" class="close" style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+			Silahkan lengkapi data terlebih dahulu</div>
+		<div class="message error" style="text-align: center; font-weight: bold; font-size:12px; line-height: 40px; height: 40px;">
+			Email yang anda masukkan salah</div>
+
+	</nav>
+
+
+	<div class="background-member head-middle">
+		<div class="panel-body">
+			<h4 class="text-center">Kami Ingin Mendengar Lebih Dari Anda</h4>
+			<form id="message">
+				<div class="form-group">
+					<label class="control-label lighther" for="email">Email:</label>
+					<input type='email' name='email' id="email" class="form-control" placeholder="Masukan Email Anda"><span class="bar"></span>
+				</div>
+				<div class="form-space">
+					<label class="control-label lighther" for="saran">Kritik & Saran:</label>
+					<textarea type="text" rows="4" name="message" id="message" class="form-control" placeholder="Kritik & Saran Anda"></textarea><span
+					 class="bar"></span>
+				</div>
+				<div class="form-group">
+					<a class="btn btn-red pull-right" onclick="send()">Kirim</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div id="confirm" class="modal fade show-modal modal-body-resize" role="dialog" style="background-color: #fff">
+		<div class="modal-dialog bg-color  " style="background-color: #fff">
+			<div class="modal-content modal-content-size" style="background-color: #fff">
+				<div class="modal-body " style="background-color: #fff">
+					<form class="resize-modal" style="background-color: #fff" role="form">
+						<p class="text-warning" style="margin-top: 15px;">
+							Terjadi kesalahan, mohon coba beberapa saat lagi.
+						</p>
+						<!-- <div class="modal-footer-size"> -->
+
+						<!-- </div> -->
+					</form>
+				</div>
+				<button type="button" onclick="next()" class="btn-ok-log btn-error" data-dismiss="modal">Ok</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="sendIT" class="modal fade show-modal modal-body-resize" role="dialog" style="background-color: #fff">
+		<div class="modal-dialog bg-color  " style="background-color: #fff">
+			<div class="modal-content modal-content-size" style="background-color: #fff">
+				<div class="modal-body " style="background-color: #fff">
+					<form class="resize-modal" style="background-color: #fff" role="form">
+						<p class="text-warning">
+							Terima kasih, Saran anda telah terkirim.
+						</p>
+						<!-- <div class="modal-footer-size"> -->
+
+						<!-- </div> -->
+					</form>
+				</div>
+				<button type="button" onclick="next()" class="btn-ok-log btn-error" data-dismiss="modal">Ok</button>
+			</div>
+		</div>
+	</div>
+	<div id="confirmsukses" class="modal fade show-modal modal-body-resize-2" role="dialog">
+		<div class="modal-dialog ">
+			<div class="modal-content modal-content-confirm">
+				<div class="modal-body size-modal-body">
+					<form class="resize-modal" role="form">
+						<p class="text-transaksi">
+							Terima kasih, Saran anda telah terkirim.
+						</p>
+						<div class="modal-footer-size">
+							<button type="button" onclick="nextstep()" class="btn-ok-log-confirm" data-dismiss="modal">OK</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Toolbar Menu -->
+	<div data-role="footer" class="navbar-fixed-bottom">
+		<div class="btn-group btn-group-justified alert-info">
+			<a href="index.html" class="btn btn-black">
+				<i class="nav-icon fa fa-ticket"></i>
+				<dt class="smaller">Book Ticket</dt>
+			</a>
+			<a href="index.html" class="btn btn-black">
+				<i class="nav-icon fa fa-address-card"></i>
+				<dt class="smaller">My Trip</dt>
+			</a>
+			<a href="index.html" class="btn btn-black">
+				<i class="nav-icon fa fa-user-circle"></i>
+				<dt class="smaller">Account</dt>
+			</a>
+			<a href="carter.html" class="btn btn-black">
+				<i class="nav-icon fa fa-bus"></i>
+				<dt class="smaller">Rent Bus</dt>
+			</a>
+			<a href="" class="btn btn-black active">
+				<i class="nav-icon fa fa-envelope"></i>
+				<dt class="smaller">Message</dt>
+			</a>
+		</div>
+	</div>
+
+	<div class="modalbox" id="loaddot" style="display: none;">
+		<div class="box">
+			<div class="preloader">
+				<div class="circ1"></div>
+				<div class="circ2"></div>
+				<div class="circ3"></div>
+			</div>
+		</div>
+
+
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript" src="assets/theme/js/style.js"></script>
+
+</body>
+<style>
+	.message {
+		font: 20px Helvetica, Arial, Sans-serif;
+		display: none;
+		width: 100%;
+		color: #fff;
+	}
+
+	.error {
+		background: red;
+	}
+</style>
+
+</html>

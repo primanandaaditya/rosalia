@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+	
+    <title>Rosalia Indah Transport</title>
+  
+	<link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="assets/loading/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+	<!-- js-Query -->
+    <script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/theme/js/custom.js"></script>
+	<script type="text/javascript" src="assets/theme/js/jquery.validate.js"></script>
+	<script type="text/javascript" src="assets/session/jstorage.js"></script>	
+    <script type="text/javascript" src="assets/session/json2.js"></script>	
+    <script type="text/javascript" src="assets/session/session.js"></script>
+	<script type="text/javascript" src="assets/theme/js/jquery.maskedinput.min.js"></script>
+  </head>
+
+  <body class="background-login">
+  
+	<nav class="navbar bg-maroon navbar-fixed-top">
+	  <div class="container-fluid">
+		<div class="navbar-header">
+		  <div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+		  <a href="index.html" class="home-icon">
+			<i class="fa fa-home fa-2x mt-2"></i>
+		  </a>
+		</div>
+	  </div>
+	</nav>	
+  
+	<div class="head-middle">
+	  <div class="panel-body">
+		<h4 class="text-center">Sign Up</h4>
+		  <form id="Formsign" role="form">
+			<div class="form-group">
+			  <label class="control-label lighther" for="">Nama Lengkap  <span class="text-danger">*</span></label>
+			  <input type="text" class="form-control" id="sign_name" name="sign_name" placeholder="Masukan Nama Lengkap"><span class="bar"></span>
+			  <i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidIDsign"> &nbsp; Nama wajib diisi</i>
+			</div>
+			<div class="form-group">
+			  <label class="control-label lighther" for="">Tanggal Lahir <span class="text-danger">*</span></label>
+			  <input type="date" class="form-control input-mask-date" id="sign_lahir" name="sign_lahir" placeholder="Masukan Tanggal Lahir"><span class="bar"></span>
+			  <i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidIDsign2"> &nbsp; Tanggal lahir wajib disi</i>
+			</div>
+			<div class="form-group">
+			  <label class="control-label lighther" for="">Handphone <span class="text-danger">*</span></label>
+			  <input type="text" class="form-control" id="sign_hp" name="sign_hp" placeholder="Masukan Nomor Handphone"><span class="bar"></span>
+			  <i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidIDsign3"> &nbsp; handphone wajib disi</i>
+			</div>
+			<div class="form-space"  id="fieldEmail">
+			  <label class="control-label lighther" for="">Email <span class="text-danger">*</span></label>
+			  <input type="email" class="form-control" id="sign_email" name="sign_email" placeholder="Masukan Alamat Email"><span class="bar"></span>
+			  <i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidIDsign4"> &nbsp; Alamat Email wajib disi</i>
+			  <p class="info"></p>
+			</div>
+			<div class="form-group">
+			  <button type="button" class="btn btn-lg btn-block bg-maroon text-white" id="sign_button">Create New Account</button>
+			</div>
+		  </form> 
+	  </div>
+	</div>
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="assets/theme/js/style.js"></script>
+	<script type="text/javascript">
+	function cekemail(email){
+		$.ajax({
+				url: 'http://117.54.124.38:81/riis-prod/api/v1/register/cekemail',
+				data: {"email":email},
+				dataType:'json',
+				type:'POST',
+				async:false,
+				success: function(response) {
+					//console.log(response.success);
+					if(response.success){
+						$('#invalidIDsign4').hide();
+						$("#Formsign").submit();
+						return true;
+					}else{
+						$('#invalidIDsign4').html(response.message);
+						$('#invalidIDsign4').show();
+						return false;
+					}
+				}
+			});
+	}
+    function validateFormSimpan2() {
+        var validator = $( "#Formsign" ).validate();//==>nama form
+		if (validator.form()) {
+			// submit with AJAX
+			var email = $("#sign_email").val();
+			cekemail(email);
+			//return true;
+		}else{
+			validator.focusInvalid();
+			return false;
+		}
+    }
+	
+	$(document).ready(function(){
+		
+		$.mask.definitions['~']='[+-]';
+		$('.input-mask-date').mask('99/99/9999');
+		
+		$("#sign_name").keyup(function(){
+			var id = $(this).val();
+			if(id == ""){
+				$("#invalidIDsign").show();
+			}else{
+				$("#invalidIDsign").hide();
+			}
+		});
+		
+		$("#sign_lahir").keyup(function(){
+			var pass = $(this).val();
+			if(pass == ""){
+				$("#invalidIDsign2").show();
+			}else{
+				$("#invalidIDsign2").hide();
+			}
+		});
+		$("#sign_hp").keyup(function(){
+			var pass2 = $(this).val();
+			if(pass2 == ""){
+				$("#invalidIDsign3").show();
+			}else{
+				$("#invalidIDsign3").hide();
+			}
+		});
+		
+		$("#sign_email").change(function(){
+			var email = $(this).val();
+			cekemail(email);
+		});
+		$('#sign_button').on('click', function(e){
+		//alert(validateFormSimpan2());
+			if (validateFormSimpan2()){
+                //$("#Formsign").submit();
+            }
+		});
+
+		$('#Formsign').validate({
+			rules : {
+				sign_name :{
+					required 	: true
+				},
+				sign_lahir :{
+					required 	: true
+				},
+				sign_hp :{
+					required 	: true
+				},
+				sign_email :{
+					email		: true,
+					required 	: true
+				}
+			},
+			messages: {
+				sign_name :{
+					required 	: " Nama wajib diisi"
+				},
+				sign_lahir :{
+					required 	: " Tanggal lahir wajib diisi"
+				},
+				sign_hp :{
+					required 	: " Handphone wajib diisi"
+				},
+				sign_email :{
+					email		: " Email tidak valid!",
+					required 	: " Alamat Email wajib diisi"
+				}
+			},
+			errorPlacement: function(error, element) {
+				if(element.attr("name") == "sign_name") {
+					$("#invalidIDsign").html(error);
+					$("#invalidIDsign").show();
+				}
+				if(element.attr("name") == "sign_lahir") {
+					$("#invalidIDsign2").html(error);
+					$("#invalidIDsign2").show();
+				}
+				if(element.attr("name") == "sign_hp") {
+					$("#invalidIDsign3").html(error);
+					$("#invalidIDsign3").show();
+				}
+				if(element.attr("name") == "sign_email") {
+					$('#invalidIDsign4').html(error);
+					$('#invalidIDsign4').show();
+				}
+				
+			}
+		});
+
+	});
+
+	function send(a,b,c,d){
+			var x = a;
+    		var y = b;
+    		var z = c;
+    		var t = d;
+
+			$.ajax({
+				type: "POST",
+			    url: 'https://rosalia-indah.co.id/web/website/email/kirimsignUp',
+			    data: {memberid:x,name:y,email:z,core:t},
+			    dataType: "json",
+			    success: function(response){
+			    	// alert(x);
+			    	// alert(y);
+			    	// alert(z);
+			    	alert('Terima Kasih Telah Mendaftar');
+			}
+		});
+	}
+
+	$("#Formsign").submit(function(e){ 
+		var form = $('#Formsign').get(0);
+		var formData = new FormData(form);
+		$.ajax({
+				delay: 250,
+				data: formData, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+				contentType: false,       // The content type used when sending data to the server.
+				cache: false,             // To unable request pages to be cached
+				processData:false,
+				dataType: 'json',
+				type: "POST",
+				url: 'http://117.54.124.38:81/riis-prod/api/v1/mobile/getmysignUPmember',
+				success: function(response){
+					if (response.success1!='') {
+						// $.jStorage.set('id', response.success2);
+						// $.jStorage.set('memberid', response.success1);
+						// $.jStorage.set('namamember', response.success3);
+						var nb1 = response.success1;
+						var nb2 = response.success3;
+						var nb3 = response.success5;
+						var nb4 = response.success6;
+						
+						send(nb1,nb2,nb3,nb4);
+						alert('Sialhkan Cek Email Anda');
+						window.location.href="index.html" 
+					}
+				}
+		});
+		return false;
+	});
+	</script>	
+	<style>
+	.error{
+		font-size:12px;
+		color: red;
+		font-weight: normal !important;
+	}
+	</style>
+  </body>
+</html>

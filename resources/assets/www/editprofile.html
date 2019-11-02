@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+	<title>Rosalia Indah Transport</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" type="text/css" href="assets/datepicker/css/bootstrap-datepicker.css" />
+	<link rel="stylesheet" type="text/css" href="assets/select2/css/select2.css" />
+	<link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+	<!-- js-Query -->
+	<script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/theme/js/custom.js"></script>
+	<script type="text/javascript" src="assets/session/jstorage.js"></script>
+	<script type="text/javascript" src="assets/session/json2.js"></script>
+	<script type="text/javascript" src="assets/theme/js/jquery.validate.js"></script>
+	<script type="text/javascript" src="assets/theme/js/jquery.maskedinput.min.js"></script>
+	<script>
+		document.addEventListener("deviceready", onDeviceReady, false);
+		function onDeviceReady() {
+			document.addEventListener("backbutton", function (e) {
+				e.preventDefault();
+			}, false);
+		}
+	</script>
+</head>
+
+<body>
+
+	<nav class="navbar bg-maroon navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navbar-brand"><img src="assets/images/riplus.png" alt="Rosalia Indah"></div>
+				<a class="home-icon">
+					<i></i>
+				</a>
+			</div>
+		</div>
+		<div id="faileddata" class="close" style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">Kode
+			booking yang anda masukkan salah</div>
+	</nav>
+
+	<div class="head-section">
+		<div class="head-second">
+			<div class="panel-body">
+				<div class="tab-content">
+					<div id="profil" class="tab-pane fade in active">
+						<form id="FormDataMember" name="FormDataMember" method="post">
+							<input type="hidden" name="memberAsal" id="memberAsal" />
+							<input type="hidden" name="act" id="act" value="praregister">
+							<div class="form-group">
+								<label for="nama" class="control-label lighther">Pilih Salah Satu <span class="text-danger">*</span></label>
+								<div class="radio">
+									<label class="radio-inline"><input type="radio" name="sebutan" value="1">Bapak</label>
+									<label class="radio-inline"><input type="radio" name="sebutan" value="2">Ibu</label>
+									<label class="radio-inline"><input type="radio" name="sebutan" value="3">Sdr/i</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther">Jenis Kelamin <span class="text-danger">*</span></label>
+								<div class="radio">
+									<label class="radio-inline"><input type="radio" name="JenisKelamin" value="1">Pria</label>
+									<label class="radio-inline"><input type="radio" name="JenisKelamin" value="2">Wanita</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="nama">Nama Lengkap <span class="text-danger">*</span></label>
+								<input type="text" class="form-control" id="namalengkap" name="namalengkap" placeholder="Masukan Nama Lengkap"><span
+								 class="bar-blue"></span>
+								<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidNama">Nama lengkap harap
+									diisi</i>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="agama">Agama: <span class="text-danger">*</span></label>
+								<select id="agama" name="agama" class="form-control">
+									<option value="">--Pilih Agama--</option>
+								</select>
+								<span class="bar-blue"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="">Tempat Lahir <span class="text-danger">*</span></label>
+								<input type="text" id="Tempatlahir" class="form-control" name="Tempatlahir" placeholder="Masukan Tempat Lahir"><span
+								 class="bar-blue"></span>
+								<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidTempatLahir">Tempat lahir
+									harap diisi</i>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="">Tanggal Lahir <span class="text-danger">*</span></label>
+								<input type="text" name="TanggalLahir1" id="TanggalLahir1" class="form-control input-mask-date" placeholder="Masukan Tanggal Lahir"><span
+								 class="bar-blue"></span>
+								<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="InvalidTglLahir">Tanggal lahir
+									harap diisi</i>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="">Alamat Lengkap <span class="text-danger">*</span></label>
+								<input type="text" id="alamat" name="alamat" class="form-control" placeholder="Masukan Alamat Lengkap"><span
+								 class="bar-blue"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="">Kelurahan</label>
+								<input type="text" id="Kelurahan" name="Kelurahan" class="form-control" placeholder="Masukan Kelurahan"><span
+								 class="bar-blue"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="">Kode Pos</label>
+								<input type="tel" maxlength="5" id="kodePos" name="kodePos" class="form-control" placeholder="Masukan Kode Pos"><span
+								 class="bar-blue"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="">RT</label>
+								<input type="tel" maxlength="3" id="rt" name="rt" class="form-control" placeholder="Masukan RT"><span class="bar-blue"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="">RW</label>
+								<input type="tel" maxlength="3" id="rw" name="rw" class="form-control" placeholder="Masukan RW"><span class="bar-blue"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="">Kecamatan</label>
+								<input type="text" id="Kecamatan" name="Kecamatan" class="form-control" placeholder="Masukan Kecamatan"><span
+								 class="bar-blue"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="">Kabupaten</label>
+								<input type="text" id="Kabupaten" name="Kabupaten" class="form-control" placeholder="Masukan Kabupaten"><span
+								 class="bar-blue"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="">Kartu Identitas <span class="text-danger">*</span></label>
+								<input type="tel" maxlength="22" id="noid" name="noid" class="form-control input-mask-phonektp" placeholder="KTP/SIM/Passport/Kartu Pelajar"><span
+								 class="bar-blue"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="">Nomor Handphone <span class="text-danger">*</span></label>
+								<input type="tel" maxlength="13" id="nohp" name="nohp" class="form-control input-mask-phone2" placeholder="Masukan Nomor Handphone"><span
+								 class="bar-blue"></span>
+								<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidTempatLahir">Nomor HP harap
+									diisi</i>
+							</div>
+							<div class="form-group">
+								<label class="control-label lighther" for="">Email <span class="text-danger">*</span></label>
+								<input type="email" id="Alamatemail" name="Alamatemail" class="form-control" placeholder="Masukan Email"><span
+								 class="bar-blue"></span>
+							</div>
+							<div class="form-space">
+								<label class="control-label lighther" for="">Agen Terdekat <span class="text-danger">*</span></label>
+								<input type="text" id="AgenAsalPnp" name="AgenAsalPnp" class="form-control" placeholder="Pilih Agen Terdekat"
+								 data-toggle="modal" data-target="#myAgen">
+								<input type="hidden" id="agenterdekat" name="agenterdekat">
+								<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidAgenTd">Agen terdekat harap
+									diisi</i>
+								<span class="bar-blue"></span>
+								<div id="myAgen" class="modal fade" role="dialog" tabindex="0">
+									<div class="modal-dialog">
+										<!-- Modal content-->
+										<div class="modal-content">
+											<div class="modal-header ">
+												<button type="button" class="close" data-dismiss="modal">&times;</button>
+												<p class="modal-title">Pilih Agen Terdekat</p>
+											</div>
+											<div class="modal-body">
+												<select name="agen_id" class="form-control js-select2" id="agen_id"></select>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<button type="button" class="btn btn-red pull-right" id="update">Perbarui</button><br /><br />
+							</div>
+						</form>
+					</div>
+
+
+
+				</div>
+				<!-- <div id="confirm" class="modal fade show-modal modal-body-resize" role="dialog" style="height: 190px;">
+					<div class="modal-dialog ">
+						<div class="modal-content modal-content-size">
+							<div class="modal-body ">
+								<form class="resize-modal" role="form">
+									<p class="text-warning">
+										Terima Kasih, Data anda berhasil diperbaharui. Segera lakukan transaksi pertama, untuk mengaktifkan account
+										member anda.
+									</p>
+									<div class="modal-footer-size">
+										<button type="button" onclick="index()" class="btn-ok-log" data-dismiss="modal">Ok</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div> -->
+				<div class="modalbox" id="loaddot" style="display: none;">
+					<div class="box">
+						<div class="preloader">
+							<div class="circ1"></div>
+							<div class="circ2"></div>
+							<div class="circ3"></div>
+						</div>
+					</div>
+					<script type="text/javascript" src="cordova.js"></script>
+					<script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+					<script type="text/javascript" src="assets/datepicker/js/bootstrap-datepicker.js"></script>
+					<script type="text/javascript" src="assets/select2/js/select2.js"></script>
+					<script type="text/javascript" src="assets/theme/js/style.js"></script>
+					<script type="text/javascript" src="assets/theme/js/config.js"></script>
+
+					<script type="text/javascript">
+						function index() {
+							window.location = "index.html";
+						}
+						function formatResult(data) {
+							if (!data.id) {
+								return data.text;
+							}
+							var $data = $(
+								'<span><b>' + data.kode + ' - ' + data.text + '</b></span></br><span>' + ucwords(data.kota) + '</span>'
+							);
+							return $data;
+						};
+						//Form Validation
+						function validateFormSimpan() {
+
+							var validator = $("#FormDataMember").validate();//==>nama form
+							if (validator.form()) {
+								// submit with AJAX
+								return true;
+							} else {
+								validator.focusInvalid();
+								return false;
+							}
+						}
+						function validateFormUpdateMember() {
+							var validator = $("#updatepwd").validate();//==>nama form
+							if (validator.form()) {
+								// submit with AJAX
+								return true;
+							} else {
+								validator.focusInvalid();
+								return false;
+							}
+						}
+						$(document).ready(function () {
+							//$('#TanggalLahir1').datepicker();
+							$.mask.definitions['~'] = '[+-]';
+							$('.input-mask-date').mask('99/99/9999');
+
+							$.mask.definitions['~'] = '[+-]';
+							$('.input-mask-phone2').mask('9999999999999', { autoclear: false, placeholder: "" });
+
+							$.mask.definitions['~'] = '[+-]';
+							$('.input-mask-phonektp').mask('9999999999999999999', { autoclear: false, placeholder: "" });
+
+							$(".js-select").select2();
+							$('.js-select2').css('width', '100%');
+							$(".js-select2").select2();
+							$("#myAgen").on('shown.bs.modal', function (e) {
+								$(this).removeAttr('tabindex');
+							});
+
+							// Dropdown Agen 
+							var config = ApiAddressprodAndDev();
+							$.ajax({
+								contentType: false,       // The content type used when sending data to the server.
+								cache: false,             // To unable request pages to be cached
+								processData: false,
+								dataType: 'json',
+								type: "POST",
+								url: `${config}/mobiledev/listagen/`,
+								// url: "http://192.168.200.2:82/riis_prod_api/api/v1/mobile/listagen/",
+								success: function (data) {
+									$.each(data, function (key, v) {
+										$('#agen_id').append('<option value="' + v.agen_id + '" data-agen="' + v.nama_agen + '">' + v.nama_agen + '</option>');
+									});
+									$('#agen_id').val($("#agenterdekat").val());
+									$('#agen_id').trigger('change');
+								}
+							});
+
+							$("#agen_id").on('select2:close', function (e) {
+								var d = $('#select2-agen_id-container').attr('title');
+								$("#agenterdekat").val($(this).val());
+								$("#AgenAsalPnp").val(d);
+							});
+
+
+							//Dropdown Agama
+							$.ajax({
+								//delay: 250,
+								//data: {memID : memberid}, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+								contentType: false,       // The content type used when sending data to the server.
+								cache: false,             // To unable request pages to be cached
+								processData: false,
+								dataType: 'json',
+								type: "POST",
+								url: `${config}/mobiledev/listagama/`,
+								// url: "http://192.168.200.2:82/riis_prod_api/api/v1/mobile/listagama/",
+								success: function (data) {
+									$.each(data, function (key, v) {
+										$('#agama').append('<option value="' + v.agama_id + '">' + v.agama + '</option>');
+									});
+
+								}
+							});
+
+
+
+							//get session member
+							var id = $.jStorage.get('id', '');
+							var memid = $.jStorage.get('memberid', '');
+							$("#memberAsal").val(memid);
+							$("#memid").val(memid);
+							var config = ApiAddressprodAndDev();
+							$.ajax({
+								delay: 250,
+								//data: {memID : memberid}, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+								contentType: false,       // The content type used when sending data to the server.
+								cache: false,             // To unable request pages to be cached
+								processData: false,
+								dataType: 'json',
+								type: "GET",
+								url: `${config}/member/getdatapelanggan/` + id + '/' + memid,
+								// url: 'http://192.168.200.2:82/riis_prod_api/api/v1/member/getdatapelanggan/' + id + '/' + memid,
+								success: function (d) {
+									// alert(d.agama); 
+									$('#agenterdekat').val(d.agen_id);
+
+									$('#agama').val(d.agama); // Change the value or make some change to the internal state
+									$('#agama').trigger('change');
+									$("#namalengkap").val(ucwords(d.nama_member));
+									$("#alamat").val(d.alamat);
+									$("#Tempatlahir").val(ucwords(d.tempat_lahir));
+									$("#TanggalLahir1").val(d.tgl_lahir_member);
+									$("#Kelurahan").val(d.kelurahan);
+									$("#Kecamatan").val(d.kecamatan);
+									$("#Kabupaten").val(d.kabupaten);
+									$("#kodePos").val(d.Kodepos);
+									$("#rt").val(d.RT);
+									$("#rw").val(d.RW);
+									$("#noid").val(d.identitas_member);
+									$("#nohp").val(d.no_telp);
+									$("#Alamatemail").val(d.email);
+									$('input[name="sebutan"][value="' + d.Sebutan + '"]').prop('checked', true);
+									$('input[name="JenisKelamin"][value="' + d.Jenis_kelamin + '"]').prop('checked', true);
+									$('#AgenAsalPnp').val(d.nama_agen);
+								}
+							});
+
+							//update data member
+							$('#update').on('click', function (e) {
+								if (validateFormSimpan()) {
+									$("#FormDataMember").submit()
+								}
+							});
+							$("#BtnUpdatepwd").click(function (e) {
+								if (validateFormUpdateMember()) {
+									$("#updatepwd").submit();
+								}
+							});
+							//validasi data
+							$('#FormDataMember').validate({
+								rules: {
+									namalengkap: {
+										required: true
+									},
+									nohp: {
+										required: true
+									},
+									Tempatlahir: {
+										required: true
+									},
+									TanggalLahir1: {
+										required: true
+									},
+									Alamatemail: {
+										required: true
+									},
+									AgenAsalPnp: {
+										required: true
+									},
+									noid: {
+										required: true
+									}
+								},
+								errorPlacement: function (error, element) {
+									if (element.attr("name") == "namalengkap") {
+										$("#invalidNama").show();
+									}
+									if (element.attr("name") == "nohp") {
+										$("#invalidHp").show();
+									}
+									if (element.attr("name") == "Tempatlahir") {
+										$("#invalidTempatLahir").show();
+									}
+									if (element.attr("name") == "TanggalLahir1") {
+										$("#InvalidTglLahir").show();
+									}
+									if (element.attr("name") == "Alamatemail") {
+										$("#invalidEmail").show();
+									}
+									if (element.attr("name") == "noid") {
+										$("#invalidIdentitas").show();
+									}
+									if (element.attr("name") == "AgenAsalPnp") {
+										$("#invalidAgenTd").show();
+									}
+
+
+
+								}
+							});
+
+						});
+						function onConfirm(button) {
+							if (button == 1) {//ok
+								window.location = "index.html";
+							}
+						}
+
+						function onConfirmfail(button) {
+
+
+						}
+
+						//submit
+						$("#FormDataMember").submit(function (e) {
+							//var form = $('#FormDataMember').serialize();
+							var form = $('#FormDataMember').get(0);
+							var formData = new FormData(form);
+							console.log(formData);
+							var config = ApiAddressprodAndDev();
+							$.ajax({
+
+								data: formData, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+								contentType: false,       // The content type used when sending data to the server.
+								cache: false,             // To unable request pages to be cached
+								processData: false,
+								dataType: 'json',
+								type: "POST",
+								url: `${config}/mobiledev/ubah_member`,
+								// url: "http://192.168.200.2:82/riis_prod_api/api/v1/mobile/ubah_member",
+								
+								success: function (response) {
+									console.log(response)
+									if (response.success === true) {
+										// $('#confirm').modal('show');
+										navigator.notification.confirm(
+											'Terima Kasih, Data anda berhasil diperbaharui. Segera lakukan transaksi pertama, untuk mengaktifkan account member anda.',  // message
+											onConfirm,              // callback to invoke with index of button pressed
+											'',            // title
+											'Ok'          // buttonLabels
+										);
+										// alert('Terima Kasih, Data anda telah berhasil diperbaharui. Silahkan ');
+										// window.location="index.html";
+									} else {
+										// alert('Data anda gagal diperbaharui, silahkan cek kembali.');
+										navigator.notification.confirm(
+											'Data anda gagal diperbaharui, silahkan cek kembali.',  // message
+											onConfirmfail,              // callback to invoke with index of button pressed
+											'Gagal update',            // title
+											'Ok'          // buttonLabels
+										);
+									}
+
+								}
+							});
+							return false;
+						});
+						$("#updatepwd").submit(function (e) {
+							var form = $('#updatepwd').get(0);
+							var formData = new FormData(form);
+							// console.log(form);
+							document.getElementById('loaddot').style.display = 'block';
+							var config = ApiAddressprodAndDev();
+							$.ajax({
+
+								data: formData, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+								contentType: false,       // The content type used when sending data to the server.
+								cache: false,             // To unable request pages to be cached
+								processData: false,
+								dataType: 'json',
+								type: "POST",
+								url: `${config}/mobiledev/ubah_pass_member/`,
+								// url: "http://192.168.200.2:82/riis_prod_api/api/v1/mobile/ubah_pass_member/",
+								success: function (response) {
+									if (response.success === true) {
+										document.getElementById('loaddot').style.display = 'none';
+										// alert('Terima Kasih, Password anda telah berhasil diperbaharui. Silahkan Login Kembali!');
+										$('#confirmsukses').modal('show');
+										$.jStorage.deleteKey('namamember');
+										$.jStorage.deleteKey('memberid');
+										$.jStorage.deleteKey('id');
+										// setTimeout(function(){window.location.href="index.html"} , 5000);
+									} else {
+										document.getElementById('loaddot').style.display = 'none';
+										//alert('Password anda gagal diperbaharui, silahkan cek kembali.');
+										$('#confirmerr').modal('show');
+									}
+
+								}
+							});
+							return false;
+
+						})
+						function nextstep() {
+							window.location.href = "index.html"
+						}
+					</script>
+</body>
+
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+	<title>Rosalia Indah Transport</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+	<!-- js-Query -->
+	<script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/theme/js/jquery.maskedinput.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$.mask.definitions['~'] = '[+-]';
+			$('.input-mask-phone').mask('999999999999', { autoclear: false, placeholder: "" });
+		});
+		function send() {
+			var nama = $('#nama').val();
+			var telp = $('#telp').val();
+			var tipe = $('#tipe').val();
+			var comment = $('textarea#comment').val();
+			if (nama == '') {
+				var x = document.getElementById("failed");
+				x.className = "show";
+				setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+			} else if (telp == '') {
+				var x = document.getElementById("failed");
+				x.className = "show";
+				setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+			} else if (tipe == '') {
+				var x = document.getElementById("failed");
+				x.className = "show";
+				setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+			} else if (comment == '') {
+				var x = document.getElementById("failed");
+				x.className = "show";
+				setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+			} else {
+				document.getElementById('loaddot').style.display = 'block';
+				$.ajax({
+					type: "GET",
+					url: "https://rosalia-indah.co.id/web/website/email/kirim2_mobile",
+					data: { nama: nama, telp: telp, tipe: tipe, comment: comment },
+					dataType: "json",
+					success: function (response) {
+						document.getElementById('loaddot').style.display = 'none';
+						$('#nama').val('');
+						$('#telp').val('');
+						$('#tipe').val('');
+						$('textarea#comment').val('');
+						$('#confirmsukses').modal('show');
+					},
+
+					error: function (error) {
+						document.getElementById('loaddot').style.display = 'none'
+						$('#nama').val('');
+						$('#telp').val('');
+						$('#tipe').val('');
+						$('textarea#comment').val('');
+						$('#confirmsukses').modal('show');
+					}
+				});
+			}
+
+		}
+		document.addEventListener("deviceready", onDeviceReady, false);
+		function onDeviceReady() {
+			document.addEventListener("backbutton", function (e) {
+				e.preventDefault();
+			}, false);
+		}
+	</script>
+</head>
+
+<body class="background-second">
+
+	<div class="background-overlay">
+		<nav class="navbar bg-maroon navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+				</div>
+			</div>
+			<div id="failed" class="close" style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+				Silahkan lengkapi data terlebih dahulu</div>
+		</nav>
+
+		<div class="head-section">
+			<form class="pd-10">
+				<div class="form-space">
+					<h3 class="text-center text-white">Rent Bus</h3>
+				</div>
+				<div class="form-group">
+					<label class="control-label lighther text-white" for="kdBook">Nama Lengkap <span class="text-danger">*</span></label>
+					<input type="text" id="nama" class="form-control text-white" placeholder="Masukan Nama Lengkap"><span class="bar-blue"></span>
+				</div>
+				<div class="form-group">
+					<label class="control-label lighther text-white" for="kdBook">Nomor Handphone <span class="text-danger">*</span></label>
+					<input type="tel" id="telp" class="form-control text-white input-mask-phone" placeholder="Masukan Nomor Handphone"><span
+					 class="bar-blue"></span>
+				</div>
+				<!-- <div class="form-group">
+			<label class="control-label lighther text-white" for="armada">Pilih Jenis Armada</label>
+			<select class="form-control text-white" id="tipe">
+			  <option value="SHD">SHD</option>
+			  <option value="Reguler">Reguler</option>
+			</select>
+			<span class="bar-blue"></span>
+		  </div> -->
+				<div class="form-space">
+					<label class="control-label lighther text-white" for="">Kebutuhan Carter Dan Jumlah Peserta<span class="text-danger">*</span></label>
+					<textarea type="text" rows="4" class="form-control text-white" id="comment" placeholder="Tuliskan Kebutuhan Carter"></textarea><span
+					 class="bar"></span>
+				</div>
+				<div class="form-group">
+					<a onclick="send()" class="btn btn-red pull-right">Kirim</a>
+				</div>
+			</form>
+		</div>
+
+	</div>
+	<div id="sendIT" class="modal fade show-modal modal-body-resize" role="dialog" style="background-color: #fff">
+		<div class="modal-dialog bg-color  " style="background-color: #fff">
+			<div class="modal-content modal-content-size" style="background-color: #fff">
+				<div class="modal-body " style="background-color: #fff">
+					<form class="resize-modal" style="background-color: #fff" role="form">
+						<p class="text-warning" style="margin-top: 15px;">
+							Pesan anda telah terkirim.
+						</p>
+						<!-- <div class="modal-footer-size"> -->
+
+						<!-- </div> -->
+					</form>
+				</div>
+				<button type="button" onclick="next()" class="btn-ok-log btn-error" data-dismiss="modal">Ok</button>
+			</div>
+		</div>
+	</div>
+	<div id="confirmsukses" class="modal fade show-modal modal-body-resize-2" role="dialog">
+		<div class="modal-dialog ">
+			<div class="modal-content modal-content-confirm">
+				<div class="modal-body size-modal-body">
+					<form class="resize-modal" role="form">
+						<p class="text-warning">
+							Pesan anda telah terkirim.
+						</p>
+						<div class="modal-footer-size">
+							<button type="button" onclick="nextstep()" class="btn-ok-log btn-full btn-custom" data-dismiss="modal">OK</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Toolbar Menu -->
+	<div data-role="footer" class="navbar-fixed-bottom showTabs">
+		<div class="btn-group btn-group-justified alert-info">
+			<a href="index.html" class="btn btn-black">
+				<i class="nav-icon fa fa-ticket"></i>
+				<dt class="smaller">Book Ticket</dt>
+			</a>
+			<a href="index.html" class="btn btn-black">
+				<i class="nav-icon fa fa-address-card"></i>
+				<dt class="smaller">My Trip</dt>
+			</a>
+			<a href="index.html" class="btn btn-black">
+				<i class="nav-icon fa fa-user-circle"></i>
+				<dt class="smaller">Account</dt>
+			</a>
+			<a href="carter.html" class="btn btn-black active">
+				<i class="nav-icon fa fa-bus"></i>
+				<dt class="smaller">Rent Bus</dt>
+			</a>
+			<a href="message.html" class="btn btn-black">
+				<i class="nav-icon fa fa-envelope"></i>
+				<dt class="smaller">Message</dt>
+			</a>
+		</div>
+	</div>
+	<div class="modalbox" id="loaddot" style="display: none;">
+		<div class="box">
+			<div class="preloader">
+				<div class="circ1"></div>
+				<div class="circ2"></div>
+				<div class="circ3"></div>
+			</div>
+		</div>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript" src="assets/theme/js/style.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+	<title>Rosalia Indah Transport</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="assets/loading/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+	<!-- js-Query -->
+	<script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/theme/js/main.js"></script>
+	<!-- js-Query -->
+	<script type="text/javascript" src="assets/theme/js/custom.js"></script>
+	<script type="text/javascript" src="assets/bootbox/bootbox.min.js"></script>
+	<script type="text/javascript" src="assets/theme/js/config.js"></script>
+	<script>
+
+
+		function formatNumber(data) {
+			if (data == null) {
+				var data = 0;
+				return data;
+			} else {
+				return data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")
+			}
+		}
+		function status() {
+			$('#statuspnp').empty();
+			var nb1 = sessionStorage.getItem('nobooking');
+			var nb2 = sessionStorage.getItem('telpkontak');
+			var config = ApiAddressprodAndDev();
+			$.ajax({
+				type: "POST",
+				url: `${config}/mobiledev/statussearch2`,
+				data: { nobooking: nb1, nohp: nb2 },
+				dataType: "json",
+				success: function (response) {
+					$('#namakls').text(response.data.nama_kelas);
+					$('#jamberangkat').text(response.data.jam_berangkat);
+					$('#dari').text(response.data.naik);
+					$('#tujuan').text(response.data.tujuan);
+					$('#tgl_berangkat').text(hari_tgl_indo(response.data.tgl_berangkat));
+					var status = response.data.status;
+					if (status == 1 || status == 5 || status == 2) {
+						$('#statuspnp').append('<div class="form-space text-center">' +
+							'<div class="grid-lunas">' +
+							'<span class="status-lunas">' +
+							'<i class="fa fa-check fa-2x"></i>' +
+							'</span>' +
+							'<b class="medium-lg pl-1">Pembayaran Lunas</b>' +
+							'</div>' +
+							'</div>');
+						//$('#cetak_tiket').show();
+					} else if (status == 8 || status == 9 || status == 10 || status == 12) {
+						$('#statuspnp').append('<div class="form-space text-center">' +
+							'<div class="grid-pending">' +
+							'<span class="status-pending">' +
+							'<i class="fa fa-exclamation fa-2x"></i>' +
+							'</span>' +
+							'<b class="medium-lg pl-2">Menunggu Pembayaran</b>' +
+							'</div>' +
+							'</div>');
+						$('#note').html('<span class="text-danger">*</span>) <font color="red">Mohon segera melakukan pembayaran</font>');
+					} else {
+						$('#statuspnp').append('<div class="form-space text-center">' +
+							'<div class="grid-failed">' +
+							'<span class="status-failed">' +
+							'<i class="fa fa-close fa-2x"></i>' +
+							'</span>' +
+							'<b class="medium-lg pl-2">Pembayaran Failed</b>' +
+							'</div>' +
+							'</div>');
+					}
+					var qew = $('#statuspnp').size();
+					//alert(qew);
+					$('#jmlPnp').text(qew + ' Penumpang');
+				}
+			});
+			setTimeout(function () { status() }, 10000);
+		}
+
+
+		$(document).ready(function () {
+			status();
+			var nb1 = sessionStorage.getItem('nobooking');
+			var nb2 = sessionStorage.getItem('telpkontak');
+			$('#nobooking1').text(nb1);
+			var config = ApiAddressprodAndDev();
+			$.ajax({
+				type: "POST",
+				url: `${config}/reservation/getlistpass`,
+				data: { nobooking: nb1, nohp: nb2 },
+				dataType: "json",
+				success: function (response) {
+					// console.log(response)
+					// var me = size(response);
+					var sumi = 0;
+					$.each(response, function (key, v) {
+						if (v.status == 8) {
+							$('#datPenumpang').append('<div class="panel panel-tosca">' +
+								'<div class="panel-body">' +
+								'<div class="form-group">' +
+								'<table class="table table-sm">' +
+								'<tbody>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">No. Tiket</td>' +
+								'<td width="50%" class="text-tosca"> - </td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">Nama Lengkap</td>' +
+								'<td width="50%">' + v.nama_penumpang + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">Tanggal Lahir</td>' +
+								'<td width="50%">' + v.tgl_lahir + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">Alamat Email</td>' +
+								'<td width="50%">' + v.email + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">No Handphone</td>' +
+								'<td width="50%" class="text-tosca">' + v.no_hp + '</td>' +
+								'</tr>' +
+								'</tbody>' +
+								'</table>' +
+								'</div>' +
+								'</div>' +
+								'</div>');
+							sumi += parseFloat(v.total);
+						} else {
+							$('#datPenumpang').append('<div class="panel panel-tosca">' +
+								'<div class="panel-body">' +
+								'<div class="form-group">' +
+								'<table class="table table-sm">' +
+								'<tbody>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">No. Tiket</td>' +
+								'<td width="50%">' + v.no_tiket + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">Nama Lengkap</td>' +
+								'<td width="50%">' + v.nama_penumpang + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">Tanggal Lahir</td>' +
+								'<td width="50%">' + v.tgl_lahir + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">Alamat Email</td>' +
+								'<td width="50%">' + v.email + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">No Handphone</td>' +
+								'<td width="50%">' + v.no_hp + '</td>' +
+								'</tr>' +
+								'</tbody>' +
+								'</table>' +
+								'</div>' +
+								'</div>' +
+								'</div>');
+							sumi += parseFloat(v.total);
+						}
+					});
+
+					$('#jumlahrp').text(formatNumber(sumi));
+				}
+			});
+
+			var berangkatid = localStorage.getItem('kebid');
+			var pg = sessionStorage.getItem('pg');
+
+			if (pg == 706 || pg == 707) {
+				var config = ApiAddressprodAndDev();
+				$.ajax({
+					type: "POST",
+					url: `${config}/mobiledev/GettransID`,
+					data: { nobooking: nb1, kebid: berangkatid },
+					dataType: "json",
+					success: function (response) {
+						console.log(response.data[0].PGTransaksiID)
+						$('#numbercodepay').append('<div class="color-block-head-code id-trans">' +
+							'<div class="image-code"><img class="image-code" src="assets/images/icon/kode.png"></div>' +
+							'<div class="txt-name-code">Kode Pembayaran anda</div>' +
+							'</div>' +
+							'<div class="color-block-head-number-code txt-code-trans" id="numbercode">' + response.data[0].PGTransaksiID + '</div>');
+					}
+				});
+			}
+
+
+			// var jml = localStorage.getItem('jml');
+			// var berangkat = localStorage.getItem('kebid');
+			// //alert(berangkat);
+			// var harga = sessionStorage.getItem('harga');
+			// var nobooking = sessionStorage.getItem('nobooking');			
+			// var namakontak = sessionStorage.getItem('namakontak');			
+			// var telpkontak = sessionStorage.getItem('telpkontak');			
+			// var emailkontak = sessionStorage.getItem('emailkontak');
+			// var pg = sessionStorage.getItem('pg');
+			// var kode = sessionStorage.getItem('kode');
+			// var fee = sessionStorage.getItem('fee');
+			// $("#nobooking").text(nobooking);
+
+			// if(pg == '4'){
+			// 	var link = 'faspayccredirect/?kode='+kode+'&harga='+harga+'&fee='+fee+'&feebri=1500&kdbooking='+nobooking+'&nama='+namakontak+'&pg=4&jml='+jml+'&brktid='+berangkat+'&email='+emailkontak+'&telp='+telpkontak+'';
+			// }else{
+
+			// 	var link = 'faspayandroid/?kode='+kode+'&harga='+harga+'&fee='+fee+'&kdbooking='+nobooking+'&nama='+namakontak+'&pg='+pg+'&jml='+jml+'&brktid='+berangkat+'';
+			// }
+
+
+			// var url = 'http://192.168.200.230:82/web/'+link;
+
+			// alert(url);
+			// $("selector").load(url);
+			// localStorage.setItem('UrlPayment', url);
+			// window.open(url,'_blank'); // <- This is what makes it open in a new window.
+			// var loc = window.location.href = "peymentView.html" = +url;
+			// var loc = window.location.href = "PaymentView.html";
+			// // alert(loc)
+			// // window.location.href = "peymentView.html";
+			// var back = localStorage.getItem('UrlPayment');
+			// alert(back)
+			// if(back !== 'backproses'){
+			// 	window.location = "peymentView.html?url=" + url;
+			// }
+			// urlcode(url);
+
+			// window.location.href = url;
+
+			document.addEventListener("deviceready", onDeviceReady, false);
+			function onDeviceReady() {
+				//         var back = localStorage.getItem('UrlPayment');
+				//         // alert(back);
+				// var inAppBrowserbRef;
+				//         inAppBrowserbRef = window.open(url, '_self', 'location=no,toolbarcolor=#00ff00,zoom=no');
+
+				//                 inAppBrowserbRef.addEventListener('loadstart', inAppBrowserbLoadStart);
+				//                 inAppBrowserbRef.addEventListener('loadstop', inAppBrowserbLoadStop);
+				//                 inAppBrowserbRef.addEventListener('loaderror', inAppBrowserbLoadError);
+				//                 inAppBrowserbRef.addEventListener('exit', inAppBrowserbClose);
+				//                 navigator.notification.activityStart("Mohon ditunggu", "loading data....");
+
+
+				//         function inAppBrowserbLoadStart(event) {
+
+				//                 navigator.notification.activityStart("Mohon ditunggu", "loading data....");
+				//                 // alert(event.type + ' - ' + event.url);
+
+				//             }
+
+				//             function inAppBrowserbLoadStop(event) {
+				//                 navigator.notification.activityStop();
+				//                 // alert(event.type + ' - ' + event.url);
+
+				//             }
+
+				//             function inAppBrowserbLoadError(event) {
+				//                 navigator.notification.activityStop();
+				//                 // alert(event.type + ' - ' + event.message);
+				//             }
+
+				//             function inAppBrowserbClose(event) {
+				//                 // alert(event.type);
+				//                 // inAppBrowserbRef.removeEventListener('loadstart', iabLoadStart);
+				//                 // inAppBrowserbRef.removeEventListener('loadstop', iabLoadStop);
+				//                 // inAppBrowserbRef.removeEventListener('loaderror', iabLoadError);
+				//                 inAppBrowserbRef.removeEventListener('exit', iabClose);
+				//                 window.location = "index.html";
+				//             }
+				// function iabClose(){
+				//     alert("keluar");
+				// }
+				// document.addEventListener("backbutton", function (e) {
+				// 	e.preventDefault();
+				//             // alert('backpres hardware')
+				//             window.location = "index.html";
+				// }, false );
+				document.addEventListener("backbutton", function (e) {
+					e.preventDefault();
+
+					navigator.notification.confirm(
+						'Pastikan anda sudah melakukan pembayaran, apabila belum melakukan pembayaran mohon catat kode pembayaran dan kode booking anda',  // message
+						onConfirm,              // callback to invoke with index of button pressed
+						'Pembayaran',            // title
+						'Ok,Cancel'          // buttonLabels
+					);
+
+				}, false);
+
+				function onConfirm(button) {
+					if (button == 1) {//ok
+						window.location = "index.html";
+					}else{
+
+					}
+				}
+			}
+
+			// function onBackKeyDown() {
+			//     // alert('backpres')
+			//     // localStorage.setItem('back', 'backproses');
+			//     // window.location = "payment.html";
+			// }
+
+			// //  $(document).ready(function(){
+
+			// //  });
+
+			// function pay_back(){
+			//     // alert('backpresbackpres')
+			//     // localStorage.setItem('back', 'backproses');
+			//     // window.location = "payment.html";
+			// }
+
+		});
+	</script>
+</head>
+
+<body>
+
+	<nav class="navbar bg-maroon navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+				<!-- <i onclick="pay_back()" class="fa fa-arrow-circle-left fa-2x mt-2 pay-back"></i> -->
+			</div>
+		</div>
+
+	</nav>
+	<div id="selector" style="display: none;"></div>
+	<div class="head-section">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<table class="table table-sm">
+					<tbody>
+						<tr>
+							<td class="text-center" width="49%">
+								<dd><span id="dari"></span></dd>
+								<dd class="medium"><span id="tgl_berangkat"></span></dd>
+							</td>
+							<td width="2%"><img src="assets/images/icon/shd.gif" width="72" class="center-block" /></td>
+							<td class="text-center" width="49%">
+								<dd><span id="tujuan"></span></dd>
+								<dd class="medium"><span id="jmlPnp"></span></dd>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div class="panel panel-tosca">
+			<div class="panel-body">
+				<span id="statuspnp"></span>
+				<div class="form-id-trans" id="numbercodepay">
+
+
+				</div>
+				<table class="table table-xs">
+					<tbody>
+						<tr>
+							<td class="text-left"><span class="smaller text-grey">Total Harga</span></td>
+							<td class="text-right"><span class="smaller">Kode Booking</span></td>
+						</tr>
+						<tr>
+							<td class="text-left"><span class="medium-big text-primary" id="jumlahrp"></span></td>
+							<td class="text-right"><span class="medium-big grid-class-book" id="nobooking1"></span></td>
+						</tr>
+						<tr>
+							<td class="text-left"><span class="smaller text-grey">Kelas Armada</span></td>
+							<td class="text-right"><span class="smaller text-grey">Waktu Berangkat</span></td>
+						</tr>
+						<tr>
+							<td class="text-left"><span class="medium-lg text-primary" id="namakls"></span></td>
+							<td class="text-right"><span class="medium-lg text-primary" id="jamberangkat"></span> <span class="medium-lg">WIB</span></td>
+						</tr>
+					</tbody>
+
+				</table>
+				<dl>
+					<dd class="medium"><span class="text-danger">*</span>) Harap CATAT kode booking Anda.</dd>
+					<dd class="medium"><span class="text-danger">*</span>) Harap melakukan check in di Agen 30 menit sebelum jam
+						keberangkatan.</dd>
+					<dd id="note" class="medium"></dd>
+
+				</dl>
+				<!--  <div class="form-refresh text-center">
+                    <div class="grid-refresh">
+                      <a class="medium-lg pl-1" onclick="status()">Refresh</a>
+                    </div>
+									</div> -->
+
+			</div>
+
+			<div class="panel-heading">
+				Daftar Penumpang
+			</div>
+			<div id="datPenumpang"></div>
+
+		</div>
+	</div>
+
+	<div class="btn-group btn-group-justified">
+		<a href="" class="btn btn-lg btn-grey btn-block" id="cetak_tiket" style="display:none">Cetak Tiket</a>
+	</div>
+
+	<script type="text/javascript" src="cordova.js"></script>
+	<script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="assets/theme/js/style.js"></script>
+
+
+
+	<script type="text/javascript" src="cordova.js"></script>
+</body>
+
+</html>

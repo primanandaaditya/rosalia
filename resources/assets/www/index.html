@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+	<title>Rosalia Indah Transport</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="assets/loading/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+	<!-- js-Query -->
+	<script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/theme/js/custom.js"></script>
+	<script type="text/javascript" src="assets/theme/js/jquery.validate.js"></script>
+	<script type="text/javascript" src="assets/session/jstorage.js"></script>
+	<script type="text/javascript" src="assets/session/json2.js"></script>
+	<script type="text/javascript" src="assets/session/session.js"></script>
+</head>
+
+<body class="background-home">
+
+	<!-- Navbar Logo -->
+	<img src="assets/images/navbrand.png" class="navbar-logo" />
+
+	<!-- Grid Caption Header -->
+	<div class="background-caption">
+		<div class="section-grid">
+			<table class="table-cell">
+				<tbody>
+					<tr>
+						<td><span class="section-title">Welcome</span></td>
+					</tr>
+					<tr>
+						<td>
+							<span class="section-text" data-toggle="modal" data-target="#myLogin" id="register"><i class="fa fa-user-circle"></i>&nbsp;Login
+								or Sign Up</span>
+							<span class="section-text" id="registered" style="display:none"></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="btnevent" style="display:none">
+			<button onclick="nextevent()" class="learn-more">
+			  <div class="circle">
+				<span class="icon arrow"></span>
+			  </div>
+			  <p class="button-text">Ikuti event DD</p>
+			</button>
+		  </div>
+		<div class="second-grid">
+			<div class="btn-group btn-group-justified">
+				<a href="booking.html" class="btn btn-black"><img src="assets/images/icon/ticket.png" height="46" class="center-block" /><dt
+					 class="smaller">Reservation</dt></a>
+				<a href="check.html" class="btn btn-black"><img src="assets/images/icon/check.png" height="46" class="center-block" /><dt
+					 class="smaller">Check Status</dt></a>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal -->
+	<div id="myLogin" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content background-login">
+				<div class="modal-header bg-maroon">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<img src="assets/images/navbrand.png" width="160" />
+				</div>
+				<div id="faileddata" class="close" style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">Mohon
+					periksa kembali ID dan Password</div>
+				<div class="modal-body">
+					<div class="table-middle">
+						<div class="form-space">
+							<h3 class="text-center">Login</h3>
+						</div>
+						<form id="FormLogin" role="form">
+							<div class="form-space">
+								<label class="control-label lighther" for="">ID Member <span class="text-danger">*</span></label>
+								<input type="text" class="form-control" id="member_id" name="member_id" placeholder="Masukan ID Member"><span
+								 class="bar"></span>
+								<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidID"> &nbsp; ID Member wajib
+									diisi</i>
+								<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidID1"> &nbsp; ID Member belum
+									terdaftar</i>
+							</div>
+							<div class="form-space">
+								<label class="control-label lighther" for="">Password <span class="text-danger">*</span></label>
+								<input type="password" class="form-control" id="password" name="password" placeholder="Masukan Password"><span
+								 class="bar"></span>
+								<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidPass"> &nbsp; Password wajib
+									diisi</i>
+								<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidPass1"> &nbsp; Password yang
+									anda masukkan salah</i>
+								<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidAll"> &nbsp; Username /
+									Password yang Anda masukkan salah</i>
+							</div>
+							<div class="form-space">
+								<button type="button" class="btn btn-lg btn-block bg-maroon text-white" data-toggle="modal" data-target="#myModal"
+								 id="login_button"> Login</button>
+							</div>
+							<!-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" style="display:none">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="loader-container">
+											<div class="container three">
+												<div class="spinner3"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div> -->
+							<div class="form-group">
+								<label class="pull-left"><a href="forgot.html" class="text-primary">Forgot Password?</a></label>
+								<label class="pull-right"><a href="daftar.html" class="text-primary">Create an Account</a></label>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="confirm" class="modal fade show-modal modal-body-resize" role="dialog" style="background-color: #fff; height: 180px;">
+		<div class="modal-dialog bg-color  " style="background-color: #fff">
+			<div class="modal-content modal-content-size" style="background-color: #fff;">
+				<div class="modal-body " style="background-color: #fff">
+					<form class="resize-modal" style="background-color: #fff" role="form">
+						<p class="text-warning" style="margin-top: 10px;">
+							Terima Kasih, Segera lakukan transaksi pertama, untuk mengaktifkan account member anda.
+						</p>
+						<div class="modal-footer-size">
+							<button type="button" onclick="next()" class="btn-ok-log" data-dismiss="modal">Ok</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Toolbar Menu -->
+	<div class="navbar-fixed-bottom">
+		<div class="btn-group btn-group-justified">
+			<a href="" class="btn btn-black active">
+				<i class="nav-icon fa fa-ticket"></i>
+				<dt class="smaller">Book Ticket</dt>
+			</a>
+			<a type="button" class="btn btn-black" id="mytrip">
+				<i class="nav-icon fa fa-address-card"></i>
+				<dt class="smaller">My Trip</dt>
+			</a>
+			<a type="button" class="btn btn-black" id="member">
+				<i class="nav-icon fa fa-user-circle"></i>
+				<dt class="smaller">Account</dt>
+			</a>
+			<a href="carter.html" class="btn btn-black">
+				<i class="nav-icon fa fa-bus"></i>
+				<dt class="smaller">Rent Bus</dt>
+			</a>
+			<a href="message.html" class="btn btn-black">
+				<i class="nav-icon fa fa-envelope"></i>
+				<dt class="smaller">Message</dt>
+			</a>
+		</div>
+	</div>
+	<div id="confirmupdate" class="modal fade show-modal modal-body-resize-update" role="dialog">
+		<div class="modal-dialog modal-dialog-update ">
+			<div class="modal-content modal-content-radius">
+				<div class="modal-body modal-body-ss ">
+					<form class="resize-modal" role="form">
+						<p class="text-warning">
+							Silahkan update aplikasi anda untuk mendapatkan content terbaru!
+						</p>
+						<div class="modal-footer-size">
+							<button type="button" onclick="updateoke()" class="btn-ok-log btn-ok-update" data-dismiss="modal">Ok</button>
+							<button type="button" class="btn-ok-log btn-no-update" data-dismiss="modal">exit</button>
+						</div>
+					</form>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<div class="modalbox" id="loaddot" style="display: none;">
+		<div class="box">
+			<div class="preloader">
+				<div class="circ1"></div>
+				<div class="circ2"></div>
+				<div class="circ3"></div>
+			</div>
+		</div>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript" src="assets/loading/js/main.js"></script>
+		<script type="text/javascript" src="assets/theme/js/config.js"></script>
+		
+
+		<script type="text/javascript">
+			
+			document.addEventListener("deviceready", onDeviceReady, false);
+			function onDeviceReady() {
+				// alert('oke ya');
+				cordova.getAppVersion.getVersionNumber(function (version) {
+					var vrnumber = version;
+					var config = ApiAddressprodAndDev();
+					$.ajax({
+						type: "GET",
+						url: `${config}/mobile/getNumber/`,
+						dataType: "json",
+						success: function (response) {
+							if (vrnumber != response) {
+								$('#confirmupdate').modal('show');
+								//window.open("https://play.google.com/store/apps/details?id=com.rosalia.indah");
+							} else {
+							}
+						},
+
+						error: function (error) {
+
+						}
+					});
+				});
+				document.addEventListener("backbutton", function (e) {
+					e.preventDefault();
+				}, false);
+			}
+			function validateFormSimpan() {
+				$("#myModal").modal('hide');
+				var validator = $("#FormLogin").validate();//==>nama form
+				if (validator.form()) {
+					// submit with AJAX
+					return true;
+				} else {
+					$("#myModal").modal('hide');
+					validator.focusInvalid();
+					return false;
+				}
+			}
+			function next() {
+				window.location.href = "index.html"
+			}
+			function nextevent() {
+				window.location.href = "event.html"
+			}
+			function updateoke() {
+				// window.open("https://play.google.com/store/apps/details?id=com.rosalia.indah");
+				cordova.plugins.market.open('com.rosalia.indah')
+			}
+			$(document).ready(function () {
+
+				$("#myModal").modal('hide');
+				//$.jStorage.deleteKey('namamember');
+				//$.jStorage.deleteKey('memberid');
+				//$.jStorage.deleteKey('id');
+
+				var id = $.jStorage.get('id', '');
+				var memberid = $.jStorage.get('memberid', '');
+				var namamember = $.jStorage.get('namamember', '');
+				//alert(id);
+
+				$("#registered").text(ucwords(namamember));
+				if (id) {
+					$("#register").hide();
+					$("#registered").show();
+
+				} else {
+					$("#register").show();
+					$("#registered").hide();
+				}
+
+
+				$("#member_id").keyup(function () {
+					var id = $(this).val();
+					if (id == "") {
+						//$('#myModal').modal('show');
+						//$("#invalidID").show();
+						//$("#invalidID1").show();
+					} else {
+						$("#myModal").modal('hide');
+						$("#invalidID").hide();
+						$("#invalidID1").hide();
+					}
+				});
+				$("#password").keyup(function () {
+					var pass = $(this).val();
+					if (pass == "") {
+						//$('#myModal').modal('show');
+						$("#myModal").modal('hide');
+						$("#invalidPass").show();
+						//$("#invalidPass1").show();
+					} else {
+						$("#myModal").modal('hide');
+						$("#invalidPass").hide();
+						$("#invalidPass1").hide();
+					}
+				});
+
+				$('#login_button').on('click', function (e) {
+
+					if (validateFormSimpan()) {
+						$("#FormLogin").submit()
+						//setTimeout(function() {$('#myModal').modal('hide');}, 5000);
+					}
+				});
+
+				$('#member').on('click', function (e) {
+					var id = $.jStorage.get('id', '');
+
+					if (id) {
+						window.location.href = "member.html"
+					} else {
+						$('#myLogin').modal('toggle');
+					}
+				});
+
+				$('#mytrip').on('click', function (e) {
+					var id = $.jStorage.get('id', '');
+					if (id) {
+						window.location.href = "mytrip.html"
+					} else {
+						$('#myLogin').modal('toggle');
+					}
+				});
+
+				$('#FormLogin').validate({
+
+					rules: {
+						member_id: {
+							required: true
+						},
+						password: {
+							required: true
+						}
+					},
+					messages: {
+						member_id: {
+							required: "Username wajib diisi"
+						},
+						password: {
+							required: "Password wajib diisi"
+						}
+					},
+					errorPlacement: function (error, element) {
+						$("#myModal").modal('hide');
+						if (element.attr("name") == "member_id") {
+							$('#myModal').modal('hide');
+							$("#invalidID").show();
+						}
+						if (element.attr("name") == "password") {
+							$('#myModal').modal('hide');
+							$("#invalidPass").show();
+						}
+
+					}
+				});
+
+				var config = ApiAddressprodAndDev();
+				$.ajax({
+                    type: "POST",
+                    url: `${config}/event/getEventStatus/1`,
+                    //data: JSON.stringify(datas),
+                    //contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.status == true) {
+                            document.getElementById('btnevent').style.display = 'block';
+                        
+                        } else{
+							document.getElementById('btnevent').style.display = 'none';
+						}
+
+                    },
+                    error: function (error) {
+						document.getElementById('btnevent').style.display = 'none';
+                    }
+                });
+
+			});
+
+			function onConfirm(button) {
+				if (button == 1) {//ok
+					window.location = "index.html";
+				}
+			}
+
+			$("#FormLogin").submit(function (e) {
+				var form = $('#FormLogin').get(0);
+				var formData = new FormData(form);
+				document.getElementById('loaddot').style.display = 'block';
+				var config = ApiAddressprodAndDev();
+				$.ajax({
+					delay: 250,
+					data: formData, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+					contentType: false,       // The content type used when sending data to the server.
+					cache: false,             // To unable request pages to be cached
+					processData: false,
+					dataType: 'json',
+					type: "POST",
+					url: `${config}/member/login/`,
+
+					// url: "http://192.168.200.2:82/riis_prod_api/api/v1/member/login/",
+					success: function (response) {
+						//$('#myModal').modal('hide').delay(5000).fadeOut('slow');
+
+						//alert(response.data.success);
+						//alert(response.data.messages);
+						if (response.data.data != null) {
+							$("#invalidID1").hide();
+							if (response.data.success) {
+								document.getElementById('loaddot').style.display = 'none';
+								// alert("Login Berhasil");
+								$.jStorage.set('id', response.data.data.member_urut);
+								$.jStorage.set('memberid', response.data.data.member_id);
+								$.jStorage.set('namamember', response.data.data.nama_member);
+								//window.location.href="member.html"
+								if (response.data.data.punya_kartu == '1' || response.data.data.punya_kartu == '0') {
+									document.getElementById('loaddot').style.display = 'block';
+									setTimeout(function () { document.getElementById('loaddot').style.display = 'none'; location.href = "editprofile.html" }, 5000);
+								} else if (response.data.data.punya_kartu == '2') {
+									// $('#confirm').modal('show');
+									navigator.notification.confirm(
+										'Terima Kasih, Segera lakukan transaksi pertama, untuk mengaktifkan account member anda.',  // message
+										onConfirm,              // callback to invoke with index of button pressed
+										'',            // title
+										'Ok'          // buttonLabels
+									);
+								} else {
+									document.getElementById('loaddot').style.display = 'block';
+									setTimeout(function () { document.getElementById('loaddot').style.display = 'none'; location.href = "member.html" }, 5000);
+								}
+								// setTimeout(function(){location.href="editprofile.html"} , 5000);
+								//location.reload();
+							} else {
+								// setTimeout(function() {$('#myModal').modal('hide');}, 3000);
+								document.getElementById('loaddot').style.display = 'none';
+								//$("#invalidPass1").show();
+								setTimeout(function () { $('#invalidPass1').modal('show'); }, 3000);
+							}
+						} else {
+							// setTimeout(function() {$('#myModal').modal('hide');}, 3000);
+							document.getElementById('loaddot').style.display = 'none';
+							//$("#invalidID1").show();
+							setTimeout(function () { $('#invalidID1').modal('show'); }, 3000);
+						}
+
+					},
+					error: function (error) {
+						setTimeout(function () {
+							document.getElementById('loaddot').style.display = 'none';
+						}, 1000);
+						var x = document.getElementById("faileddata");
+						x.className = "show";
+						setTimeout(function () { x.className = x.className.replace("show", ""); }, 7000);
+					}
+				});
+				return false;
+			});
+		</script>
+		<style type="text/css">
+			.ui-button.ui-corner-all.ui-widget.ui-button-icon-only.ui-dialog-titlebar-close {
+				display: none;
+			}
+
+			.modal-content {
+				background-color: rgba(0, 0, 0, 0.8);
+			}
+
+			@keyframes rotate {
+				from {
+					transform: rotate(0deg);
+				}
+
+				to {
+					transform: rotate(360deg);
+				}
+			}
+
+			.opacity {
+				background-color: fade(#736565, 50%);
+			}
+
+
+			.container {
+				width: 100%;
+				height: 50px;
+				padding: 350px 0;
+				text-align: center;
+			}
+
+			.spinner3 {
+				width: 50px;
+				height: 50px;
+				margin: 0 auto;
+				border: 4px solid;
+				border-radius: 50%;
+				border-color: #1bbc9b;
+				animation: scale 900ms infinite linear;
+			}
+
+			.s61 {
+				animation-delay: 0ms;
+			}
+
+			.s62 {
+				animation-delay: 500ms;
+			}
+
+			.s63 {
+				animation-delay: 1000ms;
+			}
+
+			@keyframes spin {
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+
+			@keyframes scale {
+				0% {
+					transform: scale(0);
+				}
+
+				90% {
+					transform: scale(0.7);
+				}
+
+				100% {
+					transform: scale(1);
+				}
+			}
+
+			@keyframes border {
+				0% {
+					border-radius: 0;
+				}
+
+				50% {
+					border-radius: 50%;
+				}
+
+				100% {
+					border-radius: 0;
+				}
+			}
+
+			.modal-body-resize-update {
+				width: 60%;
+				margin-left: 20%;
+			}
+
+			.modal-content-radius {
+				-webkit-border-radius: 8px !important;
+				-moz-border-radius: 8px !important;
+				border-radius: 8px !important;
+				-webkit-box-shadow: none;
+				-moz-box-shadow: none;
+				box-shadow: none;
+				height: 100px;
+			}
+
+			.modal-dialog-update {
+				height: 100px;
+			}
+
+			.resize-modal {
+				height: 100px;
+			}
+
+			.modal-body-ss {
+				background-color: #fff;
+				height: 140px;
+				margin-top: 300px;
+			}
+
+			.modal-footer-size {
+				height: 100px;
+				margin-top: 20px;
+			}
+
+			.text-warning {
+				text-align: center;
+				color: #000000;
+				margin-top: -20px;
+				font-size: 11px;
+			}
+
+			.btn-ok-update {
+				width: 100px;
+				border-radius: 2px;
+			}
+
+			.btn-no-update {
+				width: 100px;
+				float: right;
+				border-radius: 2px;
+				background-color: #e9e9e9
+			}
+
+			@media screen and (max-width: 480px) {
+				.btn-no-update {
+					width: 90px;
+					float: right;
+					border-radius: 2px;
+					background-color: #e9e9e9;
+					color: #000000
+				}
+
+				.btn-ok-update {
+					width: 90px;
+					border-radius: 2px;
+				}
+
+				.modal-body-ss {
+					background-color: #fff;
+					height: 140px;
+					margin-top: 200px;
+					border-radius: 2px;
+				}
+
+				.modal-footer-size {
+					height: 80px;
+					margin-top: -10px;
+				}
+			}
+
+			/* @media screen and (max-width: 640px) {
+	.btn-no-update{
+		width: 100px;
+		float:right;
+		border-radius: 2px;
+		background-color: #e9e9e9
+	}
+	.btn-ok-update{
+		width: 100px;
+		border-radius: 2px;
+	}
+	.modal-body-ss{
+		background-color: #fff;
+		height: 140px;
+		margin-top: 300px;
+	}
+	.modal-footer-size{
+		height: 100px;
+		margin-top: 20px;
+	}
+} */
+
+@import url('https://fonts.googleapis.com/css?family=Mukta:700');
+ * {
+	 box-sizing: border-box;
+}
+ *::before, *::after {
+	 box-sizing: border-box;
+}
+
+ button {
+	 position: relative;
+	 display: inline-block;
+	 cursor: pointer;
+	 outline: none;
+	 border: 0;
+	 vertical-align: middle;
+	 text-decoration: none;
+	 background: transparent;
+	 padding: 0;
+	 font-size: inherit;
+	 font-family: inherit;
+	 
+	 
+}
+
+ button.learn-more {
+	 width: 12rem;
+	 height: auto;
+	 margin-top: 40%;
+	 margin-left: 35%;
+}
+ button.learn-more .circle {
+	 transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+	 position: relative;
+	 margin: 0;
+	 /* width: 3rem; */
+	 height: 3rem;
+	 background: #c70505;
+	 border-radius: 1.625rem;
+}
+ button.learn-more .circle .icon {
+	 transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+	 position: absolute;
+	 top: 0;
+	 bottom: 0;
+	 margin: auto;
+	 background: #fff;
+}
+ button.learn-more .circle .icon.arrow {
+	 transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+	 left: 0.625rem;
+	 width: 1.125rem;
+	 height: 0.125rem;
+	 background: none;
+}
+ button.learn-more .circle .icon.arrow::before {
+	 position: absolute;
+	 content: '';
+	 top: -0.25rem;
+	 right: 0.0625rem;
+	 width: 0.625rem;
+	 height: 0.625rem;
+	 border-top: 0.125rem solid #fff;
+	 border-right: 0.125rem solid #fff;
+	 transform: rotate(45deg);
+}
+ button.learn-more .button-text {
+	 transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+	 position: absolute;
+	 top: 0;
+	 left:8px;
+	 right: 0;
+	 bottom: 0;
+	 padding: 0.30rem 0;
+	 margin: 0 10 0 1.85rem;
+	 color: #FFF;
+	 font-weight: 700;
+	 line-height: 1.6;
+	 text-align: center;
+	 text-transform: uppercase;
+}
+ button:hover .circle {
+	 width: 100%;
+}
+ button:hover .circle .icon.arrow {
+	 background: #fff;
+	 transform: translate(1rem, 0);
+}
+ button:hover .button-text {
+	 color: #fff;
+}
+ @supports (display: grid) {
+	 /* body {
+		 display: grid;
+		 grid-template-columns: repeat(4, 1fr);
+		 grid-gap: 0.625rem;
+		 grid-template-areas: ". main main ." ". main main .";
+	} */
+	 #container {
+		 grid-area: main;
+		 align-self: center;
+		 justify-self: center;
+	}
+}
+ 
+		</style>
+</body>
+
+</html>

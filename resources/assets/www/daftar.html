@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+	<title>Rosalia Indah Transport</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="assets/loading/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+	<!-- js-Query -->
+	<script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/theme/js/custom.js"></script>
+	<script type="text/javascript" src="assets/theme/js/jquery.validate.js"></script>
+	<script type="text/javascript" src="assets/session/jstorage.js"></script>
+	<script type="text/javascript" src="assets/session/json2.js"></script>
+	<script type="text/javascript" src="assets/session/session.js"></script>
+	<script type="text/javascript" src="assets/theme/js/jquery.maskedinput.min.js"></script>
+</head>
+
+<body class="background-login">
+
+	<nav class="navbar bg-maroon navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+				<a href="index.html" class="home-icon">
+					<i class="fa fa-home fa-2x mt-2"></i>
+				</a>
+			</div>
+		</div>
+	</nav>
+
+	<div class="head-middle">
+		<div class="panel-body">
+			<h4 class="text-center">Sign Up</h4>
+			<form id="Formsign" role="form">
+				<div class="form-group">
+					<label class="control-label lighther" for="">Nama Lengkap <span class="text-danger">*</span></label>
+					<input type="text" class="form-control" id="sign_name" name="sign_name" placeholder="Masukan Nama Lengkap"><span
+					 class="bar"></span>
+					<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidIDsign"> &nbsp; Nama wajib
+						diisi</i>
+				</div>
+				<div class="form-group">
+					<label class="control-label lighther" for="">Tanggal Lahir <span class="text-danger">*</span></label>
+					<input type="text" class="form-control input-mask-date" id="sign_lahir" name="sign_lahir" placeholder="tgl/bln/thn"><span class="bar"></span>
+					<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidIDsign2"> &nbsp; Tanggal lahir
+						wajib disi</i>
+				</div>
+				<div class="form-group">
+					<label class="control-label lighther" for="">Handphone <span class="text-danger">*</span></label>
+					<input type="text" class="form-control input-mask-phone" id="sign_hp" name="sign_hp" placeholder="Masukan Nomor Handphone"><span
+					 class="bar"></span>
+					<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidIDsign3"> &nbsp; handphone
+						wajib disi</i>
+					<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidIDsign33"> &nbsp; handphone
+						sudah terdaftar</i>
+				</div>
+				<div class="form-space" id="fieldEmail">
+					<label class="control-label lighther" for="">Email <span class="text-danger">*</span></label>
+					<input type="email" class="form-control" id="sign_email" name="sign_email" placeholder="Masukan Alamat Email"><span
+					 class="bar"></span>
+					<i class="ace-icon fa fa-times-circle text-danger" style="display:none" id="invalidIDsign4"> &nbsp; Alamat Email
+						wajib disi</i>
+					<p class="info"></p>
+					<input type="hidden" name="hdpr" id="hdpr">
+				</div>
+				<div class="form-group">
+					<a type="button" class="btn btn-lg btn-block bg-maroon text-white" id="sign_button">Create New Account</a>
+				</div>
+
+
+				<div id="modalconfirm" style="display:none;" class="conf-modal-echo center success">
+					<div class="title-icon">
+						<img src="http://jimy.co/res/icon-success.jpg">
+					</div>
+					<div class="title-text">
+						<h4>Success!</h4>
+					</div>
+					<p>Silahkan Cek Sms Anda</p>
+					<div class="count-footer-echo">
+						<div class="conf-but green btn btn-xs btn-success" style="margin-right: 25px" onclick="register()">OK</div>
+					</div>
+				</div>
+
+				<div id="modalconfirm3" style="display:none;" class="conf-modal-echo center success">
+					<div class="title-icon">
+						<img src="assets/images/warning.PNG">
+					</div>
+					<div class="title-text">
+						<h3>Gagal!</h3>
+					</div>
+					<p>Verifikasi tidak valid</p>
+					<div class="count-footer-echo">
+						<div class="conf-but green btn btn-xs btn-success" style="margin-right: 25px" onclick="register()">OK</div>
+					</div>
+				</div>
+
+				<div id="modalconfirm2" style="display:none;" class="conf-modal-echo center success">
+					<p style="font-size: 18px">Kode Verifikasi
+						<br /><br />
+						<input type="text" class="form-control" name="hdpr2" id="hdpr2" maxlength="6" style="width: 150px;text-align: center; margin-left: -5px;">
+						<div class="txt-verifikasi">Kode verisikasi telah dikirim , mohon cek sms anda!</div>
+						<div class="count-footer-echo">
+							<div class="conf-but green btn btn-xs btn-success" style="margin-right: 50px" onclick="prosesID()">Simpan</div>
+						</div>
+					</p>
+				</div>
+
+			</form>
+		</div>
+	</div>
+	<div id="sendIT" class="modal fade show-modal modal-body-resize" role="dialog" style="background-color: #fff">
+		<div class="modal-dialog bg-color  " style="background-color: #fff">
+			<div class="modal-content modal-content-size" style="background-color: #fff">
+				<div class="modal-body " style="background-color: #fff">
+					<form class="resize-modal" style="background-color: #fff" role="form">
+						<p class="text-warning" style="margin-top: 15px;">
+							Terima Kasih Telah Mendaftar
+						</p>
+						<!-- <div class="modal-footer-size"> -->
+
+						<!-- </div> -->
+					</form>
+				</div>
+				<button type="button" onclick="next()" class="btn-ok-log btn-error" data-dismiss="modal">Ok</button>
+			</div>
+		</div>
+	</div>
+	<div class="modalbox" id="loaddot" style="display: none;">
+		<div class="box">
+			<div class="preloader">
+				<div class="circ1"></div>
+				<div class="circ2"></div>
+				<div class="circ3"></div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="cordova.js"></script>
+	<script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="assets/theme/js/style.js"></script>
+	<script type="text/javascript" src="assets/theme/js/config.js"></script>
+	<script type="text/javascript">
+	var config = ApiAddressprodAndDev();
+		function prosesID() {
+			$('#modalconfirm2').hide();
+			var hdpr = $('#hdpr').val();
+			var hdpr2 = $('#hdpr2').val().toUpperCase();
+			if (hdpr === hdpr2) {
+				var form = $('#Formsign').get(0);
+				var formData = new FormData(form);
+				$.ajax({
+					delay: 250,
+					data: formData,
+					contentType: false,
+					cache: false,
+					processData: false,
+					dataType: 'json',
+					type: "POST",
+					url: `${config}/mobile/getmysignUPmember`,
+					success: function (response) {
+						if (response.success1 != '') {
+							var nb1 = response.success1;
+							var nb2 = response.success3;
+							var nb3 = response.success5;
+							var nb4 = response.success6;
+
+							send(nb1, nb2, nb3, nb4);
+							$('#modalconfirm').show();
+						}
+					}
+				});
+				return false;
+			} else {
+				$('#modalconfirm3').show();
+			}
+		}
+
+
+		function register() {
+			window.location.href = "index.html";
+		}
+		function cekemail(email) {
+			// $('#img').show();
+			$.ajax({
+				url: `${config}/register/cekemail`,
+				data: { "email": email },
+				dataType: 'json',
+				type: 'POST',
+				async: false,
+				success: function (response) {
+					//console.log(response.success);
+					if (response.success) {
+						$('#invalidIDsign4').hide();
+						$("#Formsign").submit();
+						return true;
+					} else {
+						$('#invalidIDsign4').html(response.message);
+						$('#invalidIDsign4').show();
+						return false;
+					}
+				}
+			});
+		}
+		function CekNoHp(number) {
+			// $('#img').show();
+			$.ajax({
+				url: `${config}/register/cekemail`,
+				data: { "nohp": number },
+				dataType: 'json',
+				type: 'POST',
+				async: false,
+				success: function (response) {
+					//console.log(response.success);
+					if (response.success) {
+						$('#invalidIDsign33').hide();
+						$("#Formsign").submit();
+						return true;
+					} else {
+						$('#invalidIDsign33').html(response.message);
+						$('#invalidIDsign33').show();
+						return false;
+					}
+				}
+			});
+		}
+
+		function validateFormSimpan2() {
+			var validator = $("#Formsign").validate();//==>nama form
+			if (validator.form()) {
+				// submit with AJAX
+				var email = $("#sign_email").val();
+				cekemail(email);
+				//return true;
+			} else {
+				validator.focusInvalid();
+				return false;
+			}
+		}
+
+		$(document).ready(function () {
+			$.mask.definitions['~'] = '[+-]';
+			$('.input-mask-phone').mask('999999999999', { autoclear: false, placeholder: "" });
+
+			$.mask.definitions['~'] = '[+-]';
+			$('.input-mask-date').mask('99/99/9999');
+
+			$("#sign_name").keyup(function () {
+				var id = $(this).val();
+				if (id == "") {
+					$("#invalidIDsign").show();
+				} else {
+					$("#invalidIDsign").hide();
+				}
+			});
+
+			$("#sign_lahir").keyup(function () {
+				var pass = $(this).val();
+				if (pass == "") {
+					$("#invalidIDsign2").show();
+				} else {
+					$("#invalidIDsign2").hide();
+				}
+			});
+			$("#sign_hp").keyup(function () {
+				var pass2 = $(this).val();
+				if (pass2 == "") {
+					$("#invalidIDsign3").show();
+				} else {
+					$("#invalidIDsign3").hide();
+				}
+			});
+
+			$("#sign_email").change(function () {
+				var email = $(this).val();
+				cekemail(email);
+			});
+
+			$('#Formsign').validate({
+				rules: {
+					sign_name: {
+						required: true
+					},
+					sign_lahir: {
+						required: true
+					},
+					sign_hp: {
+						required: true
+					},
+					sign_email: {
+						email: true,
+						required: true
+					}
+				},
+				messages: {
+					sign_name: {
+						required: " Nama wajib diisi"
+					},
+					sign_lahir: {
+						required: " Tanggal lahir wajib diisi"
+					},
+					sign_hp: {
+						required: " Handphone wajib diisi"
+					},
+					sign_email: {
+						email: " Email tidak valid!",
+						required: " Alamat Email wajib diisi"
+					}
+				},
+				errorPlacement: function (error, element) {
+					if (element.attr("name") == "sign_name") {
+						$("#invalidIDsign").html(error);
+						$("#invalidIDsign").show();
+					}
+					if (element.attr("name") == "sign_lahir") {
+						$("#invalidIDsign2").html(error);
+						$("#invalidIDsign2").show();
+					}
+					if (element.attr("name") == "sign_hp") {
+						$("#invalidIDsign3").html(error);
+						$("#invalidIDsign3").show();
+					}
+					if (element.attr("name") == "sign_email") {
+						$('#invalidIDsign4').html(error);
+						$('#invalidIDsign4').show();
+					}
+
+				}
+			});
+
+		});
+
+		function send(a, b, c, d) {
+			var x = a;
+			var y = b;
+			var z = c;
+			var t = d;
+
+			$.ajax({
+				type: "GET",
+				url: 'https://rosalia-indah.co.id/web/website/email/kirimsignUp',
+				data: { memberid: x, name: y, email: z, core: t },
+				dataType: "json",
+				success: function (response) {
+					// alert(x);
+					// alert(y);
+					// alert(z);
+					// $('#sendIT').modal('show');
+				}
+			});
+		}
+
+		$("#Formsign").submit(function (e) {
+			$('#sign_button').prop('disabled', true);
+			document.getElementById('loaddot').style.display = 'block';
+			var form = $('#Formsign').get(0);
+			var formData = new FormData(form);
+			$.ajax({
+				delay: 250,
+				data: formData,
+				contentType: false,
+				cache: false,
+				processData: false,
+				dataType: 'json',
+				type: "POST",
+				url: `${config}/mobile/verifyMember`,
+				success: function (response) {
+					$('#modalconfirm2').show();
+					document.getElementById('loaddot').style.display = 'none';
+					$('#hdpr').val(response.vr);
+					// $('#sign_button').prop('disabled', true);
+				}
+			});
+			return false;
+		});
+	</script>
+	<style>
+		.error {
+			font-size: 12px;
+			color: red;
+			font-weight: normal !important;
+		}
+
+		.overlay {
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: rgba(0, 0, 0, 0.7);
+			transition: opacity 500ms;
+			visibility: hidden;
+			opacity: 0;
+		}
+
+		.overlay:target {
+			visibility: visible;
+			opacity: 1;
+		}
+
+		.popup {
+			margin: 70px auto;
+			padding: 20px;
+			background: #fff;
+			border-radius: 5px;
+			width: 30%;
+			position: relative;
+			transition: all 5s ease-in-out;
+		}
+
+		.popup h2 {
+			margin-top: 0;
+			color: #333;
+			font-family: Tahoma, Arial, sans-serif;
+		}
+
+		.popup .close {
+			position: absolute;
+			top: 20px;
+			right: 30px;
+			transition: all 200ms;
+			font-size: 30px;
+			font-weight: bold;
+			text-decoration: none;
+			color: #333;
+		}
+
+		.popup .close:hover {
+			color: #06D85F;
+		}
+
+		.popup .content {
+			max-height: 30%;
+			overflow: auto;
+		}
+
+		.ui-button.ui-corner-all.ui-widget.ui-button-icon-only.ui-dialog-titlebar-close {
+			display: none;
+		}
+
+		.modal-content {
+			background-color: rgba(0, 0, 0, 0.8);
+		}
+
+		@keyframes rotate {
+			from {
+				transform: rotate(0deg);
+			}
+
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		.opacity {
+			background-color: fade(#736565, 50%);
+		}
+
+
+		.container {
+			width: 100%;
+			height: 50px;
+			padding: 350px 0;
+			text-align: center;
+		}
+
+		.spinner3 {
+			width: 50px;
+			height: 50px;
+			margin: 0 auto;
+			border: 4px solid;
+			border-radius: 50%;
+			border-color: #1bbc9b;
+			animation: scale 900ms infinite linear;
+		}
+
+		.s61 {
+			animation-delay: 0ms;
+		}
+
+		.s62 {
+			animation-delay: 500ms;
+		}
+
+		.s63 {
+			animation-delay: 1000ms;
+		}
+
+		@keyframes spin {
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+
+		@keyframes scale {
+			0% {
+				transform: scale(0);
+			}
+
+			90% {
+				transform: scale(0.7);
+			}
+
+			100% {
+				transform: scale(1);
+			}
+		}
+
+		@keyframes border {
+			0% {
+				border-radius: 0;
+			}
+
+			50% {
+				border-radius: 50%;
+			}
+
+			100% {
+				border-radius: 0;
+			}
+		}
+
+		.center {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin: auto;
+		}
+
+		.conf-modal {
+			width: 200px;
+			max-width: 80%;
+			height: 100px;
+			background-color: #fafafa;
+			border-radius: 3px;
+			box-shadow: 0 12px 36px 16px rgba(0, 0, 0, 0.24);
+		}
+
+		.conf-modal-echo {
+			width: 200px;
+			max-width: 80%;
+			height: 210px;
+			background-color: #fafafa;
+			border-radius: 3px;
+			box-shadow: 0 12px 36px 16px rgba(0, 0, 0, 0.24);
+		}
+
+		.conf-modal h1 {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 10px;
+			display: inline-block;
+		}
+
+		.conf-modal-echo #hdpr2 {
+			border: solid 3px rgba(0, 0, 0, 0.3);
+			text-transform: uppercase;
+			font-size: 24px;
+			padding: 5px;
+			height: 50px;
+		}
+
+		.title-text {
+			display: inline-block;
+			height: 18px;
+			line-height: 52px;
+			margin-left: 72px;
+			margin-top: 12px;
+		}
+
+		.success h1 {
+			color: #26cf36;
+		}
+
+		.title-icon {
+			width: 10px;
+			height: 10px;
+			display: inline-block;
+			margin-right: 10px;
+			margin-left: 30px;
+			margin-top: 10px;
+			position: absolute;
+		}
+
+		.conf-modal p {
+			color: #737373;
+			padding: 15px 30px;
+			text-align: center;
+			font-size: 12px;
+			line-height: 24px;
+		}
+
+		.conf-modal-echo p {
+			color: #737373;
+			padding: 15px 30px;
+			text-align: center;
+			font-size: 12px;
+			line-height: 24px;
+		}
+
+		.count-footer {
+			background: red;
+		}
+
+		.count-footer .conf-but {
+			display: inline-block;
+			float: right;
+			margin-right: 15px;
+			margin-top: 5px;
+			text-transform: uppercase;
+			font-weight: 800;
+			color: #4c4c4c;
+			background: none;
+			padding: 10px 15px;
+			border-radius: 4px;
+		}
+
+		.count-footer-echo .conf-but {
+			display: inline-block;
+			float: right;
+			margin-right: 15px;
+			margin-top: 5px;
+			text-transform: uppercase;
+			font-weight: 800;
+			color: #4c4c4c;
+			background: none;
+			padding: 10px 25px;
+			border-radius: 4px;
+		}
+
+		.modal-footer .conf-but:hover {
+			background: #eee;
+			cursor: pointer;
+			opacity: .8;
+		}
+
+		.modal-footer .conf-but.green {
+			color: #26cf36;
+		}
+	</style>
+</body>
+
+</html>

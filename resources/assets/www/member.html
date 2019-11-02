@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+	<title>Rosalia Indah Transport</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" type="text/css" href="assets/datepicker/css/bootstrap-datepicker.css" />
+	<link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+	<!-- js-Query -->
+	<script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/theme/js/custom.js"></script>
+	<script type="text/javascript" src="assets/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="assets/bootstrap/js/bootstrap-dialog.js"></script>
+	<script type="text/javascript" src="assets/bootstrap/js/bootstrap-loading.js"></script>
+	<script type="text/javascript" src="assets/loading/js/loading.js"></script>
+	<script type="text/javascript" src="assets/session/jstorage.js"></script>
+	<script type="text/javascript" src="assets/session/json2.js"></script>
+	<script>
+
+	</script>
+</head>
+
+<body>
+
+	<nav class="navbar bg-maroon navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+				<a href="index.html" class="home-icon">
+					<i class="fa fa-home fa-2x mt-2"></i>
+				</a>
+			</div>
+		</div>
+	</nav>
+
+	<div class="head-section">
+		<table class="table table-sm" id="jenis_kartu">
+			<tbody>
+				<tr>
+					<td class="text-right" width="50%">
+						<dd class="my-icon fa fa-id-card-o fa-5x"></dd>
+					</td>
+					<td width="50%">
+						<dd class="bigger-lg-left text-capitalize" id="nama_kartu"></dd>
+						<dd class="bigger-lg-left" id="saldo_poin"></dd>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="alert-great alert-info">
+			<h4 class="text-center"><strong>Selamat Datang</strong><br /><span class="text-capitalize" id="nama_member"></span></h4>
+		</div>
+
+		<div class="panel-body">
+			<div class="form-group">
+				<table class="table table-xs">
+					<tbody>
+						<tr>
+							<td><img src="assets/images/riplus_.png" class="img-responsive" alt="Rosalia Indah"></td>
+							<td>
+								<dd class="medium-right">ID Member</dd>
+								<dd class="bigger-right"><mark class="text-maroon" id="member_id"></mark></dd>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="form-group">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td width="30%" class="medium-left">Tempat Lahir</td>
+							<td width="70%" class="text-primary"><span id="tempat_lahir"></span></td>
+						</tr>
+						<tr>
+							<td width="30%" class="medium-left">Tanggal Lahir</td>
+							<td width="70%" class="text-primary"><span id="tgl_lahir_member"></span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="form-group">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td width="30%" class="medium-left">Alamat Lengkap</td>
+							<td width="70%" class="text-primary"><span id="alamat_lengkap"></span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- Toolbar Menu -->
+		<div class="navbar-fixed-bottom">
+			<div class="btn-group btn-group-justified alert-info">
+				<a href="#" class="btn btn-black active">
+					<i class="nav-icon fa fa-user-circle-o"></i>
+					<dt class="smaller">My Profile</dt>
+				</a>
+				<a href="profile.html" class="btn btn-black">
+					<i class="nav-icon fa fa-pencil-square-o"></i>
+					<dt class="smaller">Edit Profile</dt>
+				</a>
+				<a href="coming.html" class="btn btn-black">
+					<i class="nav-icon fa fa-shopping-cart"></i>
+					<dt class="smaller">Redeem Point</dt>
+				</a>
+				<a href="index.html" class="btn btn-black" id="btn-logout">
+					<i class="nav-icon fa fa-sign-out"></i>
+					<dt class="smaller">Logout</dt>
+				</a>
+			</div>
+		</div>
+
+	</div>
+
+	<script type="text/javascript" src="cordova.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript" src="assets/theme/js/config.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#btn-logout").click(function () {
+				//$("#loading").show();
+				$.jStorage.deleteKey('namamember');
+				$.jStorage.deleteKey('memberid');
+				$.jStorage.deleteKey('id');
+				setTimeout(function () { window.location.href = "index.html" }, 5000);
+			});
+			var id = $.jStorage.get('id', '');
+			var memid = $.jStorage.get('memberid', '');
+			var config = ApiAddressprodAndDev();
+			console.log('id',id);
+			console.log('member_id', memid);
+			$.ajax({
+				//delay: 250,
+				//data: {memID : memberid}, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+				contentType: false,       // The content type used when sending data to the server.
+				cache: false,             // To unable request pages to be cached
+				processData: false,
+				dataType: 'json',
+				type: "GET",
+				url: `${config}/member/getdatapelanggan/` + id + '/' + memid,
+				// url: 'http://192.168.200.2:82/riis_prod_api/api/v1/member/getdatapelanggan/'+id+'/'+memid,
+				success: function (d) {
+					$("#jenis_kartu").addClass(d.keterangan_kartu.toLowerCase());
+					$("#nama_kartu").text(d.keterangan_kartu.toLowerCase());
+					$("#nama_member").text(ucwords(d.nama_member));
+					$("#member_id").text(d.member_id);
+					$("#saldo_poin").text(d.saldo_poin);
+					$("#keterangan_kartu").text(d.keterangan_kartu);
+					$("#tempat_lahir").text(ucwords(d.tempat_lahir));
+					$("#tgl_lahir_member").text(d.tgl_lahir_member);
+					// alert(d.tgl_lahir_member);
+
+					var alamat = d.alamat;
+					if (alamat == null) {
+						alm = '-';
+					} else {
+						var alamat = d.alamat;
+						if (d.RT) {
+							alamat = alamat + ' Rt.' + d.RT + ' Rw.' + d.RW;
+						}
+						if (d.kelurahan) {
+							alm = alamat + ', ' + d.kelurahan + ', ' + d.kecamatan + ', ' + d.kabupaten + ', ' + d.Kodepos;
+						}
+					}
+					// var alamat = d.alamat;
+					// if(d.RT){
+					// 	alamat = alamat+' Rt.'+d.RT+' Rw.'+d.RW;
+					// }
+					// if(d.kelurahan){
+					// 	alamat = alamat+', '+d.kelurahan+', '+d.kecamatan+', '+d.kabupaten+', '+d.Kodepos;
+					// }
+
+					$("#alamat_lengkap").text(alm);
+
+				}
+			});
+		});
+		document.addEventListener("deviceready", onDeviceReady, false);
+		function onDeviceReady() {
+			document.addEventListener("backbutton", function (e) {
+				e.preventDefault();
+			}, false);
+		}
+	</script>
+
+</body>
+
+</html>

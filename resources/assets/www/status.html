@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+	<title>Rosalia Indah Transport</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+	<!-- js-Query -->
+	<script type="text/javascript" src="assets/theme/js/custom.js"></script>
+	<script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/theme/js/config.js"></script>
+	<script type="text/javascript">
+		function formatNumber(data) {
+			if (data == null) {
+				var data = 0;
+				return data;
+			} else {
+				return data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")
+			}
+		}
+
+		$(document).ready(function () {
+			var nb1 = sessionStorage.getItem('kdBook');
+			var nb2 = sessionStorage.getItem('hpBook');
+			$('#nobooking1').text(nb1);
+			$('#loadingstatus').show();
+			var config = ApiAddressprodAndDev();
+			$.ajax({
+				type: "POST",
+				// url: "http://192.168.200.2:82/riis_prod_api/api/v1/reservation/getlistpass",
+				url: `${config}/reservation/getlistpass`,
+				data: { nobooking: nb1, nohp: nb2 },
+				dataType: "json",
+				success: function (response) {
+					// var me = size(response);
+					$('#loadingstatus').hide();
+					var sumi = 0;
+					$.each(response, function (key, v) {
+						if (v.status == 8) {
+							$('#datPenumpang').append('<div class="panel panel-tosca">' +
+								'<div class="panel-body">' +
+								'<div class="form-group">' +
+								'<table class="table table-sm">' +
+								'<tbody>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">No. Tiket</td>' +
+								'<td width="50%" class="text-tosca"> - </td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">Nama Lengkap</td>' +
+								'<td width="50%">' + v.nama_penumpang + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">Tanggal Lahir</td>' +
+								'<td width="50%">' + v.tgl_lahir + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">Alamat Email</td>' +
+								'<td width="50%">' + v.email + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">No Handphone</td>' +
+								'<td width="50%" class="text-tosca">' + v.no_hp + '</td>' +
+								'</tr>' +
+								'</tbody>' +
+								'</table>' +
+								'</div>' +
+								'</div>' +
+								'</div>');
+							sumi += parseFloat(v.total);
+						} else {
+							$('#datPenumpang').append('<div class="panel panel-tosca">' +
+								'<div class="panel-body">' +
+								'<div class="form-group">' +
+								'<table class="table table-sm">' +
+								'<tbody>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">No. Tiket</td>' +
+								'<td width="50%" class="text-tosca">' + v.no_tiket + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">Nama Lengkap</td>' +
+								'<td width="50%">' + v.nama_penumpang + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">Tanggal Lahir</td>' +
+								'<td width="50%">' + v.tgl_lahir + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">Alamat Email</td>' +
+								'<td width="50%">' + v.email + '</td>' +
+								'</tr>' +
+								'<tr>' +
+								'<td width="50%" class="smaller">No Handphone</td>' +
+								'<td width="50%" class="text-tosca">' + v.no_hp + '</td>' +
+								'</tr>' +
+								'</tbody>' +
+								'</table>' +
+								'</div>' +
+								'</div>' +
+								'</div>');
+							sumi += parseFloat(v.total);
+						}
+
+					});
+					var qew = response.length;
+					$('#jumlahrp').text(formatNumber(sumi));
+					$('#jmlPnp').text(qew + ' Penumpang');
+
+				}
+			});
+
+			var config = ApiAddressprodAndDev();
+			$.ajax({
+				type: "POST",
+				// url: "http://192.168.200.2:82/riis_prod_api/api/v1/mobile/statussearch2",
+				url: `${config}/mobile/statussearch2`,
+				data: { nobooking: nb1, nohp: nb2 },
+				dataType: "json",
+				success: function (response) {
+
+					$('#namakls').text(response.data.nama_kelas);
+					$('#jamberangkat').text(response.data.jam_berangkat);
+					$('#dari').text(response.data.naik);
+					$('#tujuan').text(response.data.tujuan);
+					$('#tgl_berangkat').text(hari_tgl_indo(response.data.tgl_berangkat));
+					var status = response.data.status;
+					if (status == 1 || status == 5 || status == 2) {
+						$('#statuspnp').append('<div class="form-space text-center">' +
+							'<div class="grid-lunas">' +
+							'<span class="status-lunas">' +
+							'<i class="fa fa-check fa-2x"></i>' +
+							'</span>' +
+							'<b class="medium-lg pl-1">Pembayaran Lunas</b>' +
+							'</div>' +
+							'</div>');
+					} else if (status == 8 || status == 9 || status == 10 || status == 12) {
+						$('#statuspnp').append('<div class="form-space text-center">' +
+							'<div class="grid-pending">' +
+							'<span class="status-pending">' +
+							'<i class="fa fa-exclamation fa-2x"></i>' +
+							'</span>' +
+							'<b class="medium-lg pl-2">Menunggu Pembayaran</b>' +
+							'</div>' +
+							'</div>');
+						$('#note').html('<span class="text-danger">*</span>) <font color="red">Mohon segera melakukan pembayaran</font>');
+					} else {
+						$('#statuspnp').append('<div class="form-space text-center">' +
+							'<div class="grid-failed">' +
+							'<span class="status-failed">' +
+							'<i class="fa fa-close fa-2x"></i>' +
+							'</span>' +
+							'<b class="medium-lg pl-2">Pembayaran Failed</b>' +
+							'</div>' +
+							'</div>');
+					}
+					//var qew = $('#statuspnp').size();
+					// alert(qew);
+					//$('#jmlPnp').text(qew+1+' Penumpang');
+				}
+			});
+		});
+		document.addEventListener("deviceready", onDeviceReady, false);
+		function onDeviceReady() {
+			document.addEventListener("backbutton", function (e) {
+				e.preventDefault();
+			}, false);
+		}
+	</script>
+</head>
+
+<body>
+
+	<nav class="navbar bg-maroon navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+				<a href="index.html" class="home-icon">
+					<i class="fa fa-home fa-2x mt-2"></i>
+				</a>
+			</div>
+		</div>
+	</nav>
+
+	<div class="head-section">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<table class="table table-sm">
+					<tbody>
+						<tr>
+							<td class="text-center" width="49%">
+								<dd><span id="dari"></span></dd>
+								<dd class="medium"><span id="tgl_berangkat"></span></dd>
+							</td>
+							<td width="2%"><img src="assets/images/icon/shd.gif" width="72" class="center-block" /></td>
+							<td class="text-center" width="49%">
+								<dd><span id="tujuan"></span></dd>
+								<dd class="medium"><span id="jmlPnp"></span></dd>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div class="panel panel-tosca">
+			<div class="panel-body">
+				<span id="statuspnp"></span>
+				<table class="table table-xs">
+					<tbody>
+						<tr>
+							<td class="text-left"><span class="smaller text-grey">Total Harga</span></td>
+							<td class="text-right"><span class="smaller">Kode Booking</span></td>
+						</tr>
+						<tr>
+							<td class="text-left"><span class="medium-big text-primary" id="jumlahrp"></span></td>
+							<td class="text-right"><span class="medium-big grid-class-book" id="nobooking1"></span></td>
+						</tr>
+						<tr>
+							<td class="text-left"><span class="smaller text-grey">Kelas Armada</span></td>
+							<td class="text-right"><span class="smaller text-grey">Waktu Berangkat</span></td>
+						</tr>
+						<tr>
+							<td class="text-left"><span class="medium-lg text-primary" id="namakls"></span></td>
+							<td class="text-right"><span class="medium-lg text-primary" id="jamberangkat"></span> <span class="medium-lg">WIB</span></td>
+						</tr>
+					</tbody>
+				</table>
+				<dl>
+					<dd class="medium"><span class="text-danger">*</span>) Harap CATAT kode booking Anda.</dd>
+					<dd class="medium"><span class="text-danger">*</span>) Harap melakukan check in di Agen 30 menit sebelum jam
+						keberangkatan.</dd>
+					<dd id="note" class="medium"></dd>
+				</dl>
+			</div>
+
+			<div class="panel-heading">
+				Daftar Penumpang
+			</div>
+			<!-- <div class="panel panel-defauld"><img class="center-block" src="assets/images/icon/loading.gif" id="loadingstatus" align="middle" style="width: 80px;"/ ></div> -->
+
+			<div id="datPenumpang">
+
+			</div>
+
+		</div>
+	</div>
+
+	<!--<div class="btn-group btn-group-justified">
+	  <a href="" class="btn btn-lg btn-grey btn-block">Cetak Tiket</a>
+	</div> -->
+
+	<script type="text/javascript" src="cordova.js"></script>
+	<script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="assets/theme/js/style.js"></script>
+
+</body>
+
+</html>

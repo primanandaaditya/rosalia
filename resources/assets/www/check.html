@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+	<title>Rosalia Indah Transport</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+	<!-- js-Query -->
+	<script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/theme/js/jquery.maskedinput.min.js"></script>
+	<script type="text/javascript" src="assets/theme/js/config.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$.mask.definitions['~'] = '[+-]';
+			$('.input-mask-phone').mask('999999999999', { autoclear: false, placeholder: "" });
+			$('#check').hide();
+		});
+		function getCheckstatus() {
+			var nb1 = $('#kdBook').val();
+			var nb2 = $('#hpBook').val();
+			sessionStorage.setItem('kdBook', nb1);
+			sessionStorage.setItem('hpBook', nb2);
+			if (nb1 == '') {
+				var x = document.getElementById("failed");
+				x.className = "show";
+				setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+			} else if (nb2 == '') {
+				var x = document.getElementById("failed22");
+				x.className = "show";
+				setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+			} else {
+				document.getElementById('loaddot').style.display = 'block';
+				$('#check').show();
+				var config = ApiAddressprodAndDev();
+				$.ajax({
+					type: "POST",
+					url: `${config}/reservation/getlistpass`,
+					// url: "http://192.168.200.2:82/riis_prod_api/api/v1/reservation/getlistpass",
+					data: { nobooking: nb1, nohp: nb2 },
+					dataType: "json",
+					success: function (response) {
+						document.getElementById('loaddot').style.display = 'block';
+						if (response) {
+							$('#check').hide();
+							window.location.href = "status.html";
+						} else {
+							//modal(response.messages)
+						}
+					},
+					error: function (error) {
+						setTimeout(function () {
+							document.getElementById('loaddot').style.display = 'none';
+						}, 1000);
+						var x = document.getElementById("faileddata");
+						x.className = "show";
+						setTimeout(function () { x.className = x.className.replace("show", ""); }, 7000);
+					}
+				});
+			}
+
+
+		}
+		document.addEventListener("deviceready", onDeviceReady, false);
+		function onDeviceReady() {
+			document.addEventListener("backbutton", function (e) {
+				e.preventDefault();
+			}, false);
+		}
+	</script>
+</head>
+
+<body class="background-check">
+
+	<nav class="navbar bg-maroon navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+			</div>
+		</div>
+		<div id="failed" class="close" style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+			Silahkan masukkan <span class="text-danger">kode booking</span> terlebih dahulu</div>
+		<div id="failed22" class="close" style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+			Silahkan lengkapi <span class="text-danger">Nomor handphone</span> anda</div>
+		<div id="faileddata" class="close" style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">Kode
+			booking dan nomor handphone yang anda masukkan salah.</div>
+	</nav>
+
+	<div class="head-center">
+		<div class="panel-body">
+			<form id="reserved">
+				<div class="form-space">
+					<label class="control-label lighther" for="kdBook"><span class="text-danger"> * </span>Masukan Kode Booking :
+					</label>
+					<input type="text" id="kdBook" class="form-control" placeholder="Masukan Kode Booking"><span class="bar-blue"></span>
+				</div>
+				<div class="form-space">
+					<label class="control-label lighther" for="kdBook"><span class="text-danger"> * </span>Handphone : </label>
+					<input type="text" id="hpBook" class="form-control input-mask-phone" placeholder="Masukan nomor handphone"
+					 minlength="11" maxlength="12"><span class="bar-blue"></span>
+				</div>
+				<div class="form-group text-right">
+					<!-- <img src="assets/images/icon/loading.gif" id="check" style="width: 80px;"/ > -->
+					<a class="btn btn-red" onclick="getCheckstatus()">Tampilkan</a>
+				</div>
+			</form>
+		</div>
+
+		<div data-role="footer" class="navbar-fixed-bottom">
+			<div class="btn-group btn-group-justified alert-info">
+				<a href="index.html" class="btn btn-black">
+					<i class="nav-icon fa fa-ticket"></i>
+					<dt class="smaller">Book Ticket</dt>
+				</a>
+				<a href="index.html" class="btn btn-black">
+					<i class="nav-icon fa fa-address-card"></i>
+					<dt class="smaller">My Trip</dt>
+				</a>
+				<a href="index.html" class="btn btn-black">
+					<i class="nav-icon fa fa-user-circle"></i>
+					<dt class="smaller">Account</dt>
+				</a>
+				<a href="carter.html" class="btn btn-black">
+					<i class="nav-icon fa fa-bus"></i>
+					<dt class="smaller">Rent Bus</dt>
+				</a>
+				<a href="message.html" class="btn btn-black">
+					<i class="nav-icon fa fa-envelope"></i>
+					<dt class="smaller">Message</dt>
+				</a>
+			</div>
+		</div>
+
+	</div>
+	<div class="modalbox" id="loaddot" style="display: none;">
+		<div class="box">
+			<div class="preloader">
+				<div class="circ1"></div>
+				<div class="circ2"></div>
+				<div class="circ3"></div>
+			</div>
+		</div>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript" src="assets/theme/js/style.js"></script>
+
+</body>
+
+</html>

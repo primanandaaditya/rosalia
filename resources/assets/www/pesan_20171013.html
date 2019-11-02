@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+	
+    <title>Rosalia Indah Transport</title>
+  
+	<link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+	<!-- js-Query -->
+    <script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>	
+	<script type="text/javascript" src="assets/theme/js/custom.js"></script>
+	<script type="text/javascript" src="assets/bootbox/bootbox.min.js"></script>
+	<script>
+	 //  function pesan(){
+		// window.location.href="penumpang.html";
+	 //  }
+	function ordertiket(id,sisa,harga) {
+		//alert(sisa);
+	  	var jml = localStorage.getItem('jml');
+		if(jml > sisa){
+			if(sisa > 0 ){
+				var message = 'Sisa kursi untuk keberangkatan yang anda pilih tidak mencukupi.';
+			}else{
+				var message = 'Sudah habis.';
+			}
+			var dialog = bootbox.dialog({
+				title: ' ',
+				size: 'small',
+				message: '<p><i class="fa fa-spin fa-spinner"></i> Loading...</p>'
+			});
+			dialog.init(function(){
+				setTimeout(function(){
+					dialog.find('.bootbox-body').html(message);
+				}, 1000);
+			});
+		}else{
+			var idt= id;
+			localStorage.setItem('kebid', idt);
+			sessionStorage.setItem('harga', harga);
+			window.location.href="penumpang.html";
+		}
+	  	
+	}
+
+	  $(document).ready(function () {
+              function qs() {
+			  sessionStorage.removeItem('transaksiid');
+              	var pr =localStorage.getItem('pr');
+              	var jml = localStorage.getItem('jml');
+              	var kls = localStorage.getItem('kls');
+              	var klsid = localStorage.getItem('kelasid');
+				if(klsid==0){
+					var klsid = null;
+				}
+              	var nk = localStorage.getItem('nk');
+              	var trn = localStorage.getItem('trn');
+              	var agnasal = sessionStorage.getItem('agenasal');
+              	var agntujuan = sessionStorage.getItem('agentujuan');
+              	var kodeasal = sessionStorage.getItem('kodeasal');
+              	var kodetujuan = sessionStorage.getItem('kodetujuan');
+              	$('#showagenasal').text(agnasal);
+              	$('#showagentujuan').text(agntujuan);
+              	var tgl = hari_tgl_indo(pr);
+              	$('#shodate').text(tgl);
+              	$('#showjml').text(jml);
+              	$('#showkodeasal').text(kodeasal);
+              	$('#showkodetujuan').text(kodetujuan);
+    
+                $.ajax({
+			        type: "POST",
+			        url: "http://117.54.124.38:81/riis-prod/api/v1/mobile/reservesearchpr",
+			        data: { jml:jml, trn:trn, nk:nk, pr: pr, kls: klsid},
+			        dataType: "json",
+			        success: function(response){
+			        		
+					        $.each(response.data, function(key, v) {					        	
+							
+							var sisakursi = parseInt(v.jumlah_kursi);
+							if(sisakursi < parseInt(jml)){
+								var kursisisa = '<td class="text-right text-danger" width="50%">Tidak Tersedia</td>';
+							}else{
+								var kursisisa = '<td class="text-right text-info" width="50%">Tersedia</td>';
+							}
+					        	
+					        
+							if(v.Harga >1 && parseInt(sisakursi)>parseInt(jml)){
+								if (v.agen_dilewati == 0 && v.agen_transit_id != 0) {
+
+									$('#keberangkatan').append('<div class="panel panel-default" id="' +v.keberangkatan_id+ '" onclick="ordertiket(id,'+v.jumlah_kursi+','+v.Harga+')">'+
+											'<div class="panel-body">'+
+											  '<div class="form-group">'+
+											  '<table class="table table-xs">'+
+												'<tbody>'+
+												'<tr>'+
+												  '<td class="bigger-left text-maroon" width="50%">'+v.kode_rute+'</td>'+
+												  '<td class="bigger-right text-orange" width="50%">IDR. '+v.Harga+'</td>'+
+												'</tr>'+
+												'<tr>'+
+												  '<td class="medium-lg-left" width="50%">'+v.nama_kelas+'</td>'+
+												   '<td class="text-right" width="50%">'+v.waktu_keberangkatan+' WIB</td>'+
+												'</tr>'+
+												'<tr>'+
+												  '<td class="text-left text-primary" width="50%">Transit '+v.agen_transit+'</td>'+
+												  '<td class="text-right text-danger" width="50%"></td>'+
+												'</tr>'+
+												'</tbody>'+
+											  '</table>'+
+											  '</div>'+
+											'</div>'+
+											'</div>');
+									  }else if (v.agen_dilewati == 0 && v.agen_siap_id != 0){
+
+										$('#keberangkatan').append('<div class="panel panel-default" id="' +v.keberangkatan_id+ '" onclick="ordertiket(id,'+v.jumlah_kursi+','+v.Harga+')">'+
+											'<div class="panel-body">'+
+											  '<div class="form-group">'+
+											  '<table class="table table-xs">'+
+												'<tbody>'+
+												'<tr>'+
+												  '<td class="bigger-left text-maroon" width="50%">'+v.kode_rute+'</td>'+
+												  '<td class="bigger-right text-orange" width="50%">IDR. '+v.Harga+'</td>'+
+												'</tr>'+
+												'<tr>'+
+												  '<td class="medium-lg-left" width="50%">'+v.nama_kelas+'</td>'+
+												   '<td class="text-right" width="50%">'+v.waktu_keberangkatan+' WIB</td>'+
+												'</tr>'+
+												'<tr>'+
+												  '<td class="text-left text-primary" width="50%">Penumpang Siap Sendiri Di Agen '+v.agen_siap+'</td>'+
+												  '<td class="text-right text-danger" width="50%"></td>'+
+												'</tr>'+
+												'</tbody>'+
+											  '</table>'+
+											  '</div>'+
+											'</div>'+
+											'</div>');
+									  }else{
+										$('#keberangkatan').append('<div class="panel panel-default" id="' +v.keberangkatan_id+ '" onclick="ordertiket(id,'+v.jumlah_kursi+','+v.Harga+')">'+
+											'<div class="panel-body">'+
+											  '<div class="form-group">'+
+											  '<table class="table table-xs">'+
+												'<tbody>'+
+												'<tr>'+
+												  '<td class="bigger-left text-maroon" width="50%">'+v.kode_rute+'</td>'+
+												  '<td class="bigger-right text-orange" width="50%">IDR. '+v.Harga+'</td>'+
+												'</tr>'+
+												'<tr>'+
+												  '<td class="medium-lg-left" width="50%">'+v.nama_kelas+'</td>'+
+												  '<td class="text-right" width="50%">'+v.waktu_keberangkatan+' WIB</td>'+
+												'</tr>'+
+												'<tr>'+
+												  '<td width="50%"></td>'+
+												  '<td class="text-right text-danger" width="50%"></td>'+
+												'</tr>'+
+												'</tbody>'+
+											  '</table>'+
+											  '</div>'+
+											'</div>'+
+											'</div>');
+										}
+									}
+							
+							});
+
+						},
+
+			        failure: function(errMsg) {
+			            alert(errMsg);
+			        }
+			  });
+        }
+        var splitstr = qs();
+    });
+	</script>
+  </head>
+
+  <body>
+  
+	<nav class="navbar bg-maroon navbar-fixed-top">
+	  <div class="container-fluid">
+		<div class="navbar-header">
+		  <div class="navbar-brand"><img src="assets/images/navbrand.png" width="150" alt="Rosalia Indah"></div>
+		  <a href="booking.html" class="home-icon">
+			<i class="fa fa-arrow-circle-left fa-2x mt-2"></i>
+		  </a>
+		</div>
+	  </div>
+	</nav>	
+  
+	<div class="background-content">
+	  <div class="head-wizard">
+		<ul class="steps">
+		  <li class="complete">
+			<span class="step">1</span>
+			<span class="title">Cari Tiket</span>
+		  </li>
+		  <li class="active">
+			<span class="step">2</span>
+			<span class="title">Pilih Rute</span>
+		  </li>
+		  <li>
+			<span class="step">3</span>
+			<span class="title">Isi Data</span>
+		  </li>
+		  <li>
+			<span class="step">4</span>
+			<span class="title">Pembayaran</span>
+		  </li>
+		</ul>
+	  </div>
+
+	  <div class="panel panel-info">
+		<div class="panel-heading">
+		  <table class="table table-sm">
+			<tbody>
+			  <tr>
+				<td class="text-center" width="49%"><dd id="showagenasal"></dd><dd class="medium" id="shodate"></dd></td>
+				<td width="2%"><img src="assets/images/icon/shd.gif" width="72" class="center-block" /></td>
+				<td class="text-center" width="49%"><dd id="showagentujuan"></dd><dd class="medium"><span id="showjml"></span> Penumpang</dd></td>
+			  </tr>
+			</tbody>
+		  </table>		
+		</div>
+	  </div>
+
+	  <div class="panel panel-reserved" id="keberangkatan"></div>
+
+	</div>
+	  
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="assets/theme/js/style.js"></script>
+	
+  </body>
+</html>

@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="msapplication-tap-highlight" content="no" />
+  <meta name="viewport"
+    content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+
+  <title>Rosalia Indah Transport</title>
+
+  <link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.css" />
+  <link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.css" />
+  <link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+  <!-- js-Query -->
+  <script type="text/javascript" src="assets/theme/js/jquery.min.js"></script>
+  <script type="text/javascript" src="assets/theme/js/jquery.maskedinput.min.js"></script>
+  <script type="text/javascript" src="assets/theme/js/config.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      var core = sessionStorage.getItem('core');
+      var config = ApiAddressprodAndDev();
+      curOpen = $('.step')[0];
+
+      // $('.next-btn').on('click', function () {
+
+      //   alert('kk')
+      //   let cur = $(this).closest('.step');
+      //   let next = $(cur).next();
+      //   $(cur).addClass('minimized');
+      //   setTimeout(function () {
+      //     $(next).removeClass('minimized');
+      //     curOpen = $(next);
+      //   }, 400);
+      // });
+
+      $('.close-btn').on('click', function () {
+        let cur = $(this).closest('.step');
+        $(cur).addClass('minimized');
+        curOpen = null;
+      });
+
+      $('.step .step-content').on('click', function (e) {
+        e.stopPropagation();
+      });
+
+
+
+
+      $.ajax({
+        type: "POST",
+        url: `${config}/event/add_quest/1/` + core,
+        //data: JSON.stringify(datas),
+        //contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+          console.log(response.pertanyaan)
+          for (var i = 0; i < response.pertanyaan.length; i++) {
+            var questt = response.pertanyaan[i].id_quest;
+
+            var minx = "";
+            if (i > 0) {
+              minx = "minimized";
+            }
+            $('#kuis').append(
+              '<div class="step skk-' + i + ' ' + minx + '">' +
+              '<div class="step-header">' +
+              '<div class="header">' + response.pertanyaan[i].quest_name + '</div>' +
+
+              '</div>' +
+              '<div class="step-content three">' +
+              '<form action="#" id="' + response.pertanyaan[i].id_quest + '">' +
+              '</form>' +
+              '<button class="next-btn" onclick="des(' + i + ',' + response.pertanyaan[i].quest_ans_id + ',' + response.core + ',' + response.pertanyaan[i].id_quest + ','+response.pertanyaan.length+')">Lanjutkan</button>' +
+              '</div>' +
+              '<div class="step-content " style="display:none">' +
+              '<button class="close-btn">Close</button>' +
+              '</div>' +
+              '</div>'
+            );
+
+            for (var j = 0; j < response.jawaban.length; j++) {
+              var ans = response.jawaban[j].id_quest;
+              if (questt == ans) {
+                $('#' + questt).append(
+
+                  '<p>' +
+                  '<input type="radio" id="quest' + response.jawaban[j].id_ans + '" name="answer" value="' + response.jawaban[j].id_ans + '" >' +
+                  '<label for="quest' + response.jawaban[j].id_ans + '">' + response.jawaban[j].ans_name + '</label>' +
+                  '</p>'
+                );
+              }
+            }
+          }
+
+
+
+
+        },
+        error: function (error) {
+          // setTimeout(function () {
+          //     document.getElementById('loaddot').style.display = 'none';
+          // }, 1000);
+          // var x = document.getElementById("faileddata");
+          // x.className = "show";
+          // setTimeout(function () { x.className = x.className.replace("show", ""); }, 7000);
+        }
+      });
+
+    });
+
+    var dataCC;
+    dataCC = [];
+    function des(q, idjwb, core, idpertanyaan, len) {
+      // alert(len)
+      var plus = q + 1;
+      var min = q - 1;
+      var jml = 3;
+      var curOpen = $('.step')[0];
+      // var radioValue = $("input[name='answer']:checked").val();
+      var rates = document.getElementsByName('answer');
+      var rate_value;
+      for (var i = 0; i < rates.length; i++) {
+        if (rates[i].checked) {
+          rate_value = rates[i].value;
+        }
+      }
+      if (rate_value == 'undefined' || rate_value == undefined || rate_value == '') {
+        // alert('kosong');
+        var x = document.getElementById("notnull");
+        x.className = "show";
+        setTimeout(function () { x.className = x.className.replace("show", ""); }, 7000);
+      } else {
+        var code = core + '-' + 1;
+
+        $('.skk-' + q).addClass('minimized');
+        setTimeout(function () {
+          $('.skk-' + plus).removeClass('minimized');
+          curOpen = $('.skk-' + plus);
+        }, 600);
+        $('input[name=answer]').attr('checked', false);
+
+        var s = idpertanyaan + '-' + idjwb;
+
+
+        // var data,
+        // temp,
+        // data = [];
+        temp = {};
+        temp = idpertanyaan + '-' + idjwb;
+        dataCC.push(temp);
+        // console.log(dataCC);
+        // var datas = [
+        //   {
+        //     "codes": code,
+        //     "survey": data
+
+        //   },
+
+        // ];
+        // console.log(datas)
+        if (len == plus) {
+          XXFINDS(code);
+
+        } else {
+
+        }
+
+      }
+
+
+
+    }
+
+    function XXFINDS(code) {
+      var config = ApiAddressprodAndDev();
+      var datas = [
+        {
+          "codes": code,
+          "survey": dataCC
+
+        },
+
+      ];
+      console.log(datas)
+      var hp = sessionStorage.getItem('no_hp');
+      $.ajax({
+        type: "POST",
+        url: `${config}/event/saveQuest`,
+        data: JSON.stringify(datas),
+        //contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+          console.log(response)
+          document.getElementById('loaddot').style.display = 'none';
+          if (response.status == true) {
+            document.getElementById('codeevent').style.display = 'block';
+            document.getElementById('nohandphone').style.display = 'block';
+            document.getElementById('kembalibtn').style.display = 'block';
+            // document.getElementById('info').style.display = 'block';
+            $('#nohandphone').append('<div class="heart-group header-undian">' +
+              '<span class="txt-info">Terima kasih telah mengisi data di atas.mohon catat kode undian Anda : ' + response.number + '</span>' +
+              '<br/>' +
+              '<span class="txt-info">Kode undian anda sudah kami kirim ke ' + hp + '</span>' +
+              '</div>');
+            $('#noundian').append('<h2>' + response.number + '</h2>' +
+              '<h1>Kode undian anda</h1>');
+              // $('#info').append(
+              //   '<div class="heart-group header-undian">' +
+              //   '<span class=" txt-info-code">Terima kasih telah mengisi data di atas.mohon catat kode undian Anda </span>'+
+              //   '</div>');
+
+          } else {
+            var x = document.getElementById("failedresponce");
+            x.className = "show";
+            setTimeout(function () { x.className = x.className.replace("show", ""); }, 7000);
+          }
+
+        },
+        error: function (error) {
+          setTimeout(function () {
+            document.getElementById('loaddot').style.display = 'none';
+          }, 1000);
+          var x = document.getElementById("faileddata");
+          x.className = "show";
+          setTimeout(function () { x.className = x.className.replace("show", ""); }, 7000);
+        }
+      });
+    }
+
+    function back() {
+      window.location = "event.html";
+    }
+
+
+    document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady() {
+      document.addEventListener("backbutton", function (e) {
+        e.preventDefault();
+      }, false);
+    }
+  </script>
+</head>
+
+<body class="">
+
+  <nav class="navbar bg-maroon navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <div class="navbar-brand"><img src="assets/images/navbrand.png" alt="Rosalia Indah"></div>
+      </div>
+    </div>
+    <div id="failed" class="close"
+      style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+      Silahkan masukkan <span class="text-danger">kode booking</span> terlebih dahulu</div>
+    <div id="failed22" class="close"
+      style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+      Silahkan lengkapi <span class="text-danger">Nomor handphone</span> anda</div>
+    <div id="faileddata" class="close"
+      style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+      Kode
+      booking dan nomor handphone yang anda masukkan salah.</div>
+
+    <div id="kuisfaild" class="close"
+      style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+      Jawaban anda masih salah, mohon coba kembali</div>
+    <div id="notnull" class="close"
+      style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+      Mohon dipilih salah satu terlebih dahulu</div>
+    <div id="faileddata" class="close"
+      style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+      Terjadi kesalahan pada server</div>
+    <div id="failedresponce" class="close"
+      style="display: none; text-align: center; font-weight: bold; font-size:12px; line-height: 40px; color: #fff; background-color: #08bead; height: 40px;">
+      Error response from server</div>
+  </nav>
+
+  <div class="head-center">
+    <div class="panel-body-event">
+
+      <div class="header tite-header">Jawab pertanyaan dibawah ini dengan benar untuk mendapatkan nomor undian</div>
+      <div class="steps" id="kuis">
+
+      </div>
+
+    </div>
+    <div id="nohandphone" class="card-txt" style="display:none">
+
+    </div>
+    <div id="codeevent" class="card" style="display:none">
+      <div class="heart-group">
+        <div class="circle-ripple"></div>
+        <div class="heart">
+          <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 22">
+            <path fill="#FFF" fill-rule="evenodd" transform="translate(-16 -25)" />
+          </svg>
+        </div>
+      </div>
+
+      <div id="noundian">
+
+
+
+      </div>
+      
+    </div>
+    <!-- <div id="info" stye="display:none">
+
+    </div> -->
+    <div class="step-content " id="kembalibtn" style="display:none">
+      <h5 class=" txt-info-code">Kode undian untuk bisa aktif. Pemilik harus datang mengikuti acara dan meakukan cek in/validasi</h5>
+      <button onclick="back()" class="close-btn">Kembali</button>
+    </div>
+    <div class="modalbox" id="loaddot" style="display: none;">
+      <div class="box">
+        <div class="preloader">
+          <div class="circ1"></div>
+          <div class="circ2"></div>
+          <div class="circ3"></div>
+        </div>
+      </div>
+      <script type="text/javascript" src="cordova.js"></script>
+      <script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+      <script type="text/javascript" src="assets/theme/js/style.js"></script>
+
+</body>
+
+</html>
+
+<script>
+  let curOpen;
+
+  $(document).ready(function () {
+    // curOpen = $('.step')[0];
+
+    // $('.next-btn').on('click', function () {
+    //   let cur = $(this).closest('.step');
+    //   let next = $(cur).next();
+    //   $(cur).addClass('minimized');
+    //   setTimeout(function () {
+    //     $(next).removeClass('minimized');
+    //     curOpen = $(next);
+    //   }, 400);
+    // });
+
+    // $('.close-btn').on('click', function () {
+    //   let cur = $(this).closest('.step');
+    //   $(cur).addClass('minimized');
+    //   curOpen = null;
+    // });
+
+    // $('.step .step-content').on('click', function (e) {
+    //   e.stopPropagation();
+    // });
+
+    //   $('.step').on('click', function() {
+    //     if (!$(this).hasClass("minimized")) {
+    //       curOpen = null;
+    //       $(this).addClass('minimized');
+    //     }
+    //     else {
+    //       let next = $(this);
+    //       if (curOpen === null) {
+    //         curOpen = next;
+    //         $(curOpen).removeClass('minimized');
+    //       }
+    //       else {
+    //         $(curOpen).addClass('minimized');
+    //         setTimeout(function() {
+    //           $(next).removeClass('minimized');
+    //           curOpen = $(next);
+    //         }, 300);
+    //       }
+    //     }
+    //   });
+  })
+
+</script>
+
+<style>
+  :root {
+    --background-color: #FFFFFF;
+    --primary-color: rgb(211, 37, 7);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+  }
+
+  .steps {
+    /* width: 500px; */
+    /* box-shadow: 0px 10px 15px -5px rgba(0, 0, 0, 0.3); */
+    background-color: #FFF;
+    /* padding: 24px 0; */
+    position: relative;
+    margin: auto;
+  }
+
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    height: 24px;
+    width: 1px;
+    background-color: rgba(0, 0, 0, 0.2);
+    left: calc(50px / 2);
+    z-index: 1;
+  }
+
+  .steps::after {
+    content: '';
+    position: absolute;
+    height: 13px;
+    width: 13px;
+    background-color: var(--primary-color);
+    box-shadow: 0px 0px 5px 0px var(--primary-color);
+    border-radius: 15px;
+    left: calc(50px / 2);
+    /* bottom: 0px; */
+    transform: translateX(-45%);
+    z-index: 2;
+  }
+
+  .step {
+    padding: 0 20px 24px 50px;
+    position: relative;
+    transition: all 0.4s ease-in-out;
+    background-color: #FFF;
+  }
+
+  .step::before {
+    content: '';
+    position: absolute;
+    height: 13px;
+    width: 13px;
+    background-color: rgb(198, 198, 198);
+    border-radius: 15px;
+    left: calc(50px / 2);
+    transform: translateX(-45%);
+    z-index: 2;
+  }
+
+  .step::after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    margin-top: 10px;
+    background-color: rgb(198, 198, 198);
+    left: calc(50px / 2);
+    top: 0;
+    z-index: 1;
+    margin-top: 10px;
+  }
+
+  .step.minimized {
+    background-color: #FFF;
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+  }
+
+  .header {
+    user-select: none;
+    font-size: 16px;
+    margin-top: 10px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .tite-header {
+    margin-top: -30px;
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .subheader {
+    user-select: none;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  .step-content {
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .step.minimized>.step-content {
+    height: 0px;
+  }
+
+  .step-content.one {
+    /* height: 460px; */
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+
+  .step-content.two {
+    height: 600px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+
+  .step-content.three {
+    /* height: 200px; */
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+
+  .next-btn {
+    /* position: absolute;
+    top: 80%;
+    left: 80%; */
+    margin-left: 60%;
+    margin-top: 30px;
+    border: 0;
+    padding: 4px 15px;
+    border-radius: 4px;
+    background-color: red;
+    box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.3);
+    color: #FFF;
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+  }
+
+  .close-btn {
+    /* position: absolute;
+    top: 50%;
+    left: 80%; */
+    border: 0;
+    margin-top: 70px;
+    margin-left: 20px;
+    width: 90%;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #ee462b;
+    box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.3);
+    color: #FFF;
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+    /* transform: translate(-50%, -50%); */
+  }
+
+  /* Irrelevant styling things */
+  .close-btn:hover {
+    background-color: rgb(245, 22, 22);
+  }
+
+  .close-btn:focus {
+    outline: 0;
+  }
+
+  .next-btn:hover {
+    background-color: rgba(255, 0, 0, 0.6);
+  }
+
+  .next-btn:focus {
+    outline: 0;
+  }
+
+  .step.minimized:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+
+  [type="radio"]:checked,
+  [type="radio"]:not(:checked) {
+    position: absolute;
+    left: -9999px;
+  }
+
+  [type="radio"]:checked+label,
+  [type="radio"]:not(:checked)+label {
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    line-height: 20px;
+    display: inline-block;
+    color: #666;
+  }
+
+  [type="radio"]:checked+label:before,
+  [type="radio"]:not(:checked)+label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ddd;
+    border-radius: 100%;
+    background: #bfbfbf;
+  }
+
+  [type="radio"]:checked+label:after,
+  [type="radio"]:not(:checked)+label:after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: rgb(80, 156, 243);
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    border-radius: 100%;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+  }
+
+  [type="radio"]:not(:checked)+label:after {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+
+  [type="radio"]:checked+label:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+
+  .card {
+    position: relative;
+    width: 200px;
+    height: 100px;
+    background: #ee462b;
+    box-shadow: 0 7px 8px -4px rgba(148, 13, 0, 0.20), 0 12px 17px 2px rgba(148, 13, 0, 0.14), 0 5px 22px 4px rgba(148, 13, 0, 0.12);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-left: 60px;
+  }
+
+  .card-txt {
+    position: relative;
+    width: 78%;
+    height: 100px;
+    background: #fcfcfc;
+    /* box-shadow: 0 7px 8px -4px rgba(148, 13, 0, 0.20), 0 12px 17px 2px rgba(148, 13, 0, 0.14), 0 5px 22px 4px rgba(148, 13, 0, 0.12);
+    border-radius: 10px; */
+    overflow: hidden;
+    margin-left: 60px;
+  }
+
+  .heart {
+    position: relative;
+    margin-top: 25px;
+    margin-left: 16px;
+  }
+
+  .heart-icon {
+    fill: #fff;
+    animation: beat 0.35s infinite alternate;
+    transform-origin: center;
+  }
+
+  .circle-ripple {
+    position: absolute;
+    left: 24px;
+    top: 20.5px;
+    background-color: #fff;
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    animation: ripple 0.7s linear infinite;
+  }
+
+  h2 {
+    display: inline-block;
+    font-size: 20px;
+    color: #fff;
+    letter-spacing: 0.52px;
+    line-height: 34px;
+    margin-top: -10px;
+    font-weight: 300;
+    margin-left: 16px;
+    margin-bottom: 0;
+    z-index: 2;
+    position: relative;
+  }
+
+  p {
+    font-size: 16px;
+    color: rgba(235, 235, 245, 0.60);
+    letter-spacing: -0.32px;
+    line-height: 21px;
+    margin-top: 6px;
+    margin-left: 16px;
+    margin-bottom: 0;
+    z-index: 2;
+    position: relative;
+  }
+
+  h1 {
+    font-size: 14px;
+    color: #fff;
+    letter-spacing: -0.41px;
+    line-height: 22px;
+    margin-top: 0px;
+    margin-left: 16px;
+    margin-bottom: 0;
+    font-weight: 600;
+    z-index: 2;
+    position: relative;
+  }
+
+  @keyframes ripple {
+    0% {
+      box-shadow: 0 0 0 0 rgba(148, 13, 0, 0.15), 0 0 0 1em rgba(148, 13, 0, 0.15), 0 0 0 5em rgba(148, 13, 0, 0.15), 0 0 0 10em rgba(148, 13, 0, 0.15);
+    }
+
+    100% {
+      box-shadow: 0 0 0 1em rgba(148, 13, 0, 0.15), 0 0 0 5em rgba(148, 13, 0, 0.15), 0 0 0 10em rgba(148, 13, 0, 0.15), 0 0 0 12em rgba(148, 13, 0, 0);
+    }
+  }
+
+  @keyframes beat {
+    to {
+      transform: scale(1.4);
+    }
+  }
+
+  .txt-info {
+    font-size: 13px;
+    margin-top: -20px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+  .txt-info-code{
+    font-size: 13px;
+    padding: 20px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+</style>
